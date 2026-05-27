@@ -1,9 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { MapArea } from "./map-area/map-area";
+import { SideBarLeft } from "./side-bar-left/side-bar-left";
+import { SideBarRight } from "./side-bar-right/side-bar-right";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [SideBarLeft, SideBarRight, MapArea],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
