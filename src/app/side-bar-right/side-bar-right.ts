@@ -6,5 +6,6 @@ import { MatIcon } from "@angular/material/icon";
   selector: 'app-side-bar-right',
   imports: [MatTabsModule, MatIcon],
   templateUrl: './side-bar-right.html',
+  styleUrl: './side-bar-right.css' 
 })
 export class SideBarRight {}

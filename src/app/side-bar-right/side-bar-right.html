@@ -1,9 +1,19 @@
 <div class="h-full w-[17rem] bg-gray-900 rounded shadow-md text-center rounded-none">
-    <mat-tab-group disablePagination="true">
+    <mat-tab-group class="h-full" disablePagination="true">
         <mat-tab>
             <ng-template mat-tab-label>
                 <mat-icon class="material-symbols-outlined text-white!">chat</mat-icon>
             </ng-template>
+
+            <div class="h-full flex flex-col">
+                <div class="flex-1 text-white overflow-y-auto">
+                    MESSAGES AREA
+                </div>
+                <div class="mt-auto text-white pb-[2rem]">
+                    TEXT BOX
+                </div>
+            </div>
+
         </mat-tab>
                 <mat-tab>
             <ng-template mat-tab-label>

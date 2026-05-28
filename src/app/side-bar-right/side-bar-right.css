@@ -1,0 +1,17 @@
+
+/* Alvo 1: O contêiner interno das abas */
+::ng-deep .mat-mdc-tab-body-wrapper {
+    height: 100% !important;
+}
+
+/* Alvo 2: A aba individual que está ativa */
+::ng-deep .mat-mdc-tab-body {
+    height: 100% !important;
+}
+
+/* Alvo 3: O conteúdo de dentro da aba */
+::ng-deep .mat-mdc-tab-body-content {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
