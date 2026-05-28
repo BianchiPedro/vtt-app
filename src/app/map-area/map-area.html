@@ -1,11 +1,14 @@
-<div class="h-full flex-1 overflow-hidden relative bg-neutral-900">
+<div class="h-full flex-1 overflow-hidden relative bg-neutral-900" 
+     (wheel)="onWheel($event)"
+     (mousedown)="startPan($event)"
+     (window:mousemove)="pan($event)"
+     (window:mouseup)="endPan($event)">
     
-    <div cdkDrag class="w-[3000px] h-[3000px] absolute bg-neutral-800 border-2 border-neutral-700">
-        
-        <div class="w-96 h-96 bg-white mx-auto mt-[1000px]">
-             MAPA DE TESTE
-        </div>
-        
+    <div class="w-[2000px] h-[2000px] absolute bg-neutral-800 flex items-center justify-center"
+         [style.transform]="'translate3d(' + panX + 'px, ' + panY + 'px, 0px) scale(' + zoomLevel + ')'"
+         style="will-change: transform;">
+         
+         <img src="assets/map1-sepia150.jpg" class="shadow-2xl">
+         
     </div>
-
 </div>
