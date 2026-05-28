@@ -1,4 +1,4 @@
-<div class="h-full w-[17rem] bg-gray-900 rounded shadow-md rounded-none">
+<div class="h-full w-[18rem] bg-gray-900 rounded shadow-md rounded-none">
     <mat-tab-group class="h-full" disablePagination="true">
         <mat-tab>
             <ng-template mat-tab-label>
@@ -12,7 +12,7 @@
 
                             @if (msg.isRoll && msg.rollData) {
                                 
-                                <div class="bg-white text-black rounded-md p-3 mt-1 mb-1 shadow-md w-full border-2 border-gray-300">
+                                <div class="bg-white text-black rounded-md p-3 my-1 shadow-md w-full border-3 border-gray-500">
                                     <div class="text-center">
                                         <span class="text-5xl font-bold"> {{ msg.rollData.total }} </span>
                                     </div>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="mt-auto text-white pl-2">
-                    <textarea class="h-16 w-64 bg-slate-800 border-zinc-950 border-2 rounded-lg resize-none" [(ngModel)]="message" (keydown.enter)="onEnter($event)"></textarea>
+                    <textarea class="h-16 w-64 mt-2 bg-slate-800 border-zinc-950 border-2 rounded-lg resize-none" [(ngModel)]="message" (keydown.enter)="onEnter($event)"></textarea>
                 </div>
                 <div class="flex flex-row pl-[0.5rem] gap-18">
                     <select class="text-white mb-4 bg-gray-800 rounded-sm">
