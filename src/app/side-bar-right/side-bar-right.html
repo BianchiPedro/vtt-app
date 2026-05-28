@@ -1,4 +1,4 @@
-<div class="h-full w-[17rem] bg-gray-900 rounded shadow-md text-center rounded-none">
+<div class="h-full w-[17rem] bg-gray-900 rounded shadow-md rounded-none">
     <mat-tab-group class="h-full" disablePagination="true">
         <mat-tab>
             <ng-template mat-tab-label>
@@ -7,10 +7,31 @@
 
             <div class="h-full flex flex-col">
                 <div class="flex-1 text-white overflow-y-auto">
-                    MESSAGES AREA
+                    <div class="chat-container">
+                        <div class="chat-container pl-2 pt-2">
+                            @for (msg of chatMessages; track msg) {
+                                <div [class]="'message ' + msg.author">
+                                    <p>{{ msg.text }}</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-auto text-white pb-[2rem]">
-                    TEXT BOX
+                <div class="mt-auto text-white pl-2">
+                    <textarea class="h-16 w-64 bg-slate-800 border-zinc-950 border-2 rounded-lg resize-none" [(ngModel)]="message"></textarea>
+                </div>
+                <div class="flex flex-row pl-[0.5rem] gap-18">
+                    <select class="text-white mb-4 bg-gray-800 rounded-sm">
+                        <option>
+                            Master (GM)
+                        </option>
+                        <option>
+                            Character (PC)
+                        </option>
+                    </select>
+                    <button class="text-white mb-4 px-2 py-2 bg-sky-950 rounded-lg hover:bg-sky-700" (click)="sendMessage()">
+                        ENVIAR
+                    </button>
                 </div>
             </div>
 
