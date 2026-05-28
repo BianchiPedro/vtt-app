@@ -6,49 +6,57 @@
             </ng-template>
 
             <div class="h-full flex flex-col">
-                <div class="flex-1 text-white overflow-y-auto">
-                    <div class="chat-container pl-2 pt-2">
-                        @for (msg of chatMessages; track msg) {
-
-                            @if (msg.isRoll && msg.rollData) {
+                <div class="chat-container pl-2 pt-2 pr-2 text-white">
+                    @for (msg of chatMessages; track msg) {
+                        <div class="flex flex-row gap-2 pt-3 mb-2" [class]="'message ' + msg.author">
+                            
+                            <img src="assets/images.jpg" class="w-8 h-8 rounded-full">
+                            
+                            <div class="flex flex-col text-left w-full">
                                 
-                                <div class="bg-white text-black rounded-md p-3 my-1 shadow-md w-full border-3 border-gray-500">
-                                    <div class="text-center">
-                                        <span class="text-5xl font-bold"> {{ msg.rollData.total }} </span>
+                                <span class="font-bold text-sm text-sky-400">{{ msg.author }}</span>
+                                
+                                @if (msg.isRoll && msg.rollData) {
+                                    
+                                    <div [class]="'bg-white text-black rounded-md p-3 mt-1 mb-1 shadow-md w-full border-3 ' + msg.rollData.borderColor">
+                                        
+                                        <div class="text-center">
+                                            <span class="text-5xl font-bold">{{ msg.rollData.total }}</span>
+                                        </div>
+                                        
+                                        <div class="text-center mt-1 mb-2">
+                                            <span [class]="'text-lg tracking-widest uppercase font-serif font-bold ' + msg.rollData.borderColor.replace('border-', 'text-')">
+                                                {{ msg.rollData.outcome }}
+                                            </span>
+                                        </div>
+                                        
+                                        <hr class="border-gray-300 mb-2">
+                                        
+                                        <div class="text-sm">
+                                            <p>1d12 (<span class="font-bold">{{ msg.rollData.dice1 }}</span>)</p>
+                                            <p>1d12 (<span class="font-bold">{{ msg.rollData.dice2 }}</span>)</p>
+                                            <p>Modificador (<span class="font-bold">{{ msg.rollData.modifier }}</span>)</p>
+                                        </div>
                                     </div>
-
-                                    <div class="text-center mt-1 mb-2">
-                                        <span class="text-lg tracking-widest uppercase font-serif text-gray-800">
-                                            {{ msg.rollData.outcome }}
-                                        </span>
-                                    </div>
-
-                                    <hr class="border-gray-300 mb-2">
-
-                                    <div class="text-sm">
-                                        <p>1d12 (<span class="font-bold">{{ msg.rollData.dice1 }}</span>)</p>
-                                         <p>1d12 (<span class="font-bold">{{ msg.rollData.dice2 }}</span>)</p>
-                                        <p>Modificador (<span class="font-bold">{{ msg.rollData.modifier }}</span>)</p>
-                                    </div>
+                                    
+                                } @else {
+                                    
+                                    <p class="leading-snug whitespace-pre-wrap">{{ msg.text }}</p>
+                                    
+                                }
+                                
+                                <div class="text-[10px] text-gray-400 -mt-1"> 
+                                    {{ msg.date | date:'HH:mm' }} 
                                 </div>
-                            } @else {
-                                <div class="flex flex-row gap-2 pt-3">
-                                <img src="assets/images.jpg" class=" w-8 h-8 rounded-full">
-                                <div class="flex flex-col text-left">
-                                    <p class="-mb-2">{{ msg.text }}</p>
-                                    <div class="text-[10px] text-gray-400 mt-1"> 
-                                        {{ msg.date | date:'HH:mm' }} 
-                                    </div>
-                                </div>
+                                
                             </div>
-                            }
-                        }
-                    </div>
+                        </div>
+                    }
                 </div>
                 <div class="mt-auto text-white pl-2">
-                    <textarea class="h-16 w-64 mt-2 bg-slate-800 border-zinc-950 border-2 rounded-lg resize-none" [(ngModel)]="message" (keydown.enter)="onEnter($event)"></textarea>
+                    <textarea class="h-16 w-66 mt-2 bg-slate-800 border-zinc-950 border-2 rounded-lg resize-none" [(ngModel)]="message" (keydown.enter)="onEnter($event)"></textarea>
                 </div>
-                <div class="flex flex-row pl-[0.5rem] gap-18">
+                <div class="flex flex-row pl-[0.5rem] gap-21">
                     <select class="text-white mb-4 bg-gray-800 rounded-sm">
                         <option>
                             Master (GM)

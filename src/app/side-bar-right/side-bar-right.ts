@@ -13,39 +13,37 @@ import { CommonModule } from '@angular/common';
 export class SideBarRight {
 
   message = '';
+  
   chatMessages: {
     text?: string, 
     author: string, 
     date: Date, 
     isRoll?: boolean, 
-    rollData?: { dice1: number, dice2: number, modifier: number, total: number, outcome: string }
-    }[] = [];
+    rollData?: { dice1: number, dice2: number, modifier: number, total: number, outcome: string, borderColor: string }
+  }[] = [];
 
   sendMessage() {
+    const textoLimpo = this.message.trim();
 
-    //CLEAR COMMAND
-    if (this.message.trim() === '/clear') {
+    if (!textoLimpo) return;
+
+    if (textoLimpo === '/clear') {
       this.chatMessages = [];
       this.message = '';
-      return
+      return;
     }
 
-    // ROLL COMAND
-    if (this.message.trim().startsWith('/roll')) {
+    if (textoLimpo.startsWith('/roll')) {
       this.onRoll();
+      return;
     }
 
-    // COMMON TEXT
-    if (this.message.trim()) {
-      this.chatMessages.push({text: this.message, author: 'Master (GM)', date: new Date()})
-
-      this.message = '';
-    }
+    this.chatMessages.push({text: textoLimpo, author: 'Master (GM)', date: new Date()});
+    this.message = '';
   }
 
   onEnter(event: Event) {
     const keyboardEvent = event as KeyboardEvent;
-
     if (!keyboardEvent.shiftKey) {
       keyboardEvent.preventDefault();
       this.sendMessage();
@@ -56,30 +54,28 @@ export class SideBarRight {
       const modificadorString = this.message.replace('/roll', '').replace(/\s+/g, '');
       const modifier = parseInt(modificadorString) || 0;
 
-      const dice1 = Math.floor(Math.random() * 12) +1;
-      const dice2 = Math.floor(Math.random() * 12) +1;
-
+      const dice1 = Math.floor(Math.random() * 12) + 1;
+      const dice2 = Math.floor(Math.random() * 12) + 1;
       const total = dice1 + dice2 + modifier;
 
-      let textModifier = '';
-      if (modifier > 0) {
-        textModifier = ` + ${modifier}`;
-      } else if (modifier < 0) {
-        textModifier = ` - ${Math.abs(modifier)}`;
-      }
-
       let outcomeText = '';
+      let colorClass = '';
 
       if (total < 0) {
-        outcomeText = 'FALHA CRÍTICA...'
+        outcomeText = 'FALHA CRÍTICA...';
+        colorClass = 'border-red-600';
       } else if (total <= 12) {
-        outcomeText = 'FALHA'
+        outcomeText = 'FALHA';
+        colorClass = 'border-orange-600';
       } else if (total <= 19) {
-        outcomeText = 'SUCESSO PARCIAL'
+        outcomeText = 'SUCESSO PARCIAL';
+        colorClass = 'border-blue-600';
       } else if (total <= 24) {
-        outcomeText = 'SUCESSO'
+        outcomeText = 'SUCESSO';
+        colorClass = 'border-green-600';
       } else {
-        outcomeText = 'SUCESSO CRÍTICO!!'
+        outcomeText = 'SUCESSO CRÍTICO!!';
+        colorClass = 'border-amber-400';
       }
 
       this.chatMessages.push({ 
@@ -91,10 +87,11 @@ export class SideBarRight {
           dice2: dice2,
           modifier: modifier,
           total: total,
-          outcome: outcomeText
+          outcome: outcomeText,
+          borderColor: colorClass
         }
       });
-
-      this.message = '';
+      
+      this.message = ''; 
   }
 }
