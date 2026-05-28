@@ -16,6 +16,11 @@ export class SideBarRight {
   chatMessages: {text: String, author: String, date: Date}[] = [];
 
   sendMessage() {
+    if (this.message.trim() === '/clear') {
+      this.chatMessages = [];
+      this.message = '';
+      return
+    }
     if (this.message.trim()) {
       this.chatMessages.push({text: this.message, author: '', date: new Date()})
 
