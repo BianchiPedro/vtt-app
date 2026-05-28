@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-map-area',
-  imports: [],
+  imports: [DragDropModule],
   templateUrl: './map-area.html',
 })
 export class MapArea {}
