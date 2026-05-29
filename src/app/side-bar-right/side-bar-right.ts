@@ -4,6 +4,12 @@ import { MatIcon } from "@angular/material/icon";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+export interface Folders {
+  name: string,
+  isOpen: boolean,
+  items: any[],
+}
+
 @Component({
   selector: 'app-side-bar-right',
   imports: [MatTabsModule, MatIcon, FormsModule, CommonModule],
@@ -101,4 +107,11 @@ export class SideBarRight {
       
       this.message = ''; 
   }
+
+  folders: Folders[] = [
+    {name: "Personagens (PJ's)", isOpen: false, items: []},
+    {name: "NPC's", isOpen: false, items: []},
+    {name: "Folhetos", isOpen: false, items: []}
+  ];
+
 }
