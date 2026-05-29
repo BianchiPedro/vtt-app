@@ -1,4 +1,27 @@
-<div class="bg-white w-96 h-96 p-4 shadow-2xl rounded-md border-9 border-orange-950" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div class="bg-white w-[800px] h-[800px] shadow-2xl rounded-sm border-7 border-orange-950 overflow-hidden " 
+    cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2">
+        <div>
+            <button matIconButton>
+                <mat-icon class="material-symbols-outlined text-white! bg-sky-950 rounded-md px-4 py-4">cell_tower</mat-icon>
+            </button>
+        </div>
+        <div class="flex flex-row items-center justify-center gap-3 font-bold text-lg ml-23">
+            <img src="assets/images.jpg" class="rounded-full w-8 h-8"/>
+            <p class="text-white">PERSONAGEM</p>
+        </div>
+        <div class="flex flex-row gap-2">
+            <button class="bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 flex items-center justify-center">
+                <mat-icon class="material-symbols-outlined">manage_accounts</mat-icon>
+            </button>
+            <button class="bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 flex items-center justify-center">
+                <mat-icon class="material-symbols-outlined">remove</mat-icon>
+            </button>
+            <button (click)="closeModal()" class="bg-sky-950 hover:bg-red-800 transition rounded-md p-1 flex items-center justify-center text-red-400 hover:text-white">
+                <mat-icon class="material-symbols-outlined">close</mat-icon>
+            </button>
+        </div>
+        </div>
     <div class="text-black text-center text-2xl">
         PERSONAGEM
     </div>

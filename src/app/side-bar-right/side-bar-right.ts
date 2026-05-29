@@ -128,7 +128,10 @@ export class SideBarRight {
   createitem(type: string) {
     if (type === 'Personagem') {
       this.dialog.open(CharacterSheetModal, {
-        hasBackdrop: false
+        hasBackdrop: false,
+        width: '800px',
+        maxWidth: '100vw',
+        panelClass: 'custom-dialog-container'
       });
     } else if (type === 'NPC') {
       console.log('Ainda vamos criar a lógica do NPC!');
