@@ -19,7 +19,7 @@ export class SideBarRight {
     author: string, 
     date: Date, 
     isRoll?: boolean, 
-    rollData?: { dice1: number, dice2: number, modifier: number, total: number, outcome: string, borderColor: string }
+    rollData?: { dice1: number, dice2: number, modifier: number, total: number, outcome: string, borderColor: string, textColor: string }
   }[] = [];
 
   sendMessage() {
@@ -60,22 +60,28 @@ export class SideBarRight {
 
       let outcomeText = '';
       let colorClass = '';
+      let textColor = '';
 
       if (total < 0) {
         outcomeText = 'FALHA CRÍTICA...';
         colorClass = 'border-red-600';
+        textColor = 'text-red-600';
       } else if (total <= 12) {
         outcomeText = 'FALHA';
         colorClass = 'border-orange-600';
+        textColor = 'text-orange-600';
       } else if (total <= 19) {
         outcomeText = 'SUCESSO PARCIAL';
         colorClass = 'border-blue-600';
+        textColor = 'text-blue-600';
       } else if (total <= 24) {
         outcomeText = 'SUCESSO';
         colorClass = 'border-green-600';
+        textColor = 'text-green-600';
       } else {
         outcomeText = 'SUCESSO CRÍTICO!!';
         colorClass = 'border-amber-400';
+        textColor = 'text-amber-300';
       }
 
       this.chatMessages.push({ 
@@ -88,7 +94,8 @@ export class SideBarRight {
           modifier: modifier,
           total: total,
           outcome: outcomeText,
-          borderColor: colorClass
+          borderColor: colorClass,
+          textColor: textColor,
         }
       });
       
