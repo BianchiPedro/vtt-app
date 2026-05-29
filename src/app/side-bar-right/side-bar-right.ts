@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from "@angular/material/icon";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { InvokeFunctionExpr } from '@angular/compiler';
+import { CharacterSheetModal } from './character-sheet-modal/character-sheet-modal';
+
 
 export interface Folders {
   name: string,
@@ -13,11 +17,15 @@ export interface Folders {
 
 @Component({
   selector: 'app-side-bar-right',
-  imports: [MatTabsModule, MatIcon, FormsModule, CommonModule, MatMenuModule],
+  imports: [MatTabsModule, MatIcon, FormsModule, CommonModule, MatMenuModule, MatDialogModule],
   templateUrl: './side-bar-right.html',
   styleUrl: './side-bar-right.css' 
 })
 export class SideBarRight {
+  
+  dialog = inject(MatDialog);
+
+  // CHAT COMPONENT --------------------------------------------------------------------------------------
 
   message = '';
   
@@ -109,6 +117,8 @@ export class SideBarRight {
       this.message = ''; 
   }
 
+  // CREATING SHEETS -----------------------------------------------------------------------------
+
   folders: Folders[] = [
     {name: "Personagens (PJ's)", isOpen: false, items: []},
     {name: "NPC's", isOpen: false, items: []},
@@ -116,7 +126,16 @@ export class SideBarRight {
   ];
 
   createitem(type: string) {
-    console.log('Criando: ' + type);
+    if (type === 'Personagem') {
+      this.dialog.open(CharacterSheetModal, {
+        hasBackdrop: false
+      });
+    } else if (type === 'NPC') {
+      console.log('Ainda vamos criar a lógica do NPC!');
+    } else if (type === 'Folheto') {
+      console.log('Ainda vamos criar a lógica do Folheto!');
+    }
   }
+
 
 }
