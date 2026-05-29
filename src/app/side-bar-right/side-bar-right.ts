@@ -3,6 +3,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from "@angular/material/icon";
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 
 export interface Folders {
   name: string,
@@ -12,7 +13,7 @@ export interface Folders {
 
 @Component({
   selector: 'app-side-bar-right',
-  imports: [MatTabsModule, MatIcon, FormsModule, CommonModule],
+  imports: [MatTabsModule, MatIcon, FormsModule, CommonModule, MatMenuModule],
   templateUrl: './side-bar-right.html',
   styleUrl: './side-bar-right.css' 
 })
@@ -113,5 +114,9 @@ export class SideBarRight {
     {name: "NPC's", isOpen: false, items: []},
     {name: "Folhetos", isOpen: false, items: []}
   ];
+
+  createitem(type: string) {
+    console.log('Criando: ' + type);
+  }
 
 }
