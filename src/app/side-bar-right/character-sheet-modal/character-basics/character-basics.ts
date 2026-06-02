@@ -19,9 +19,9 @@ export class CharacterBasics {
     { nome: 'Novato', icone: 'eco' },
     { nome: 'Aprendiz', icone: 'hardware' },
     { nome: 'Adepto', icone: 'swords' },
-    { nome: 'Especialista', icone: 'eco' },
-    { nome: 'Mestre', icone: 'eco' },
-    { nome: 'Grão-mestre', icone: 'eco' }
+    { nome: 'Especialista', icone: 'castle' },
+    { nome: 'Mestre', icone: 'crown' },
+    { nome: 'Grão-mestre', icone: 'flare' }
   ];
 
   // Função que o HTML vai chamar para saber qual ícone desenhar

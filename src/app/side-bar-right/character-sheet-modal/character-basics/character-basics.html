@@ -18,7 +18,7 @@
                     </select>
 
                     <div class="w-8 h-full flex items-center justify-center border-l border-black bg-gray-100">
-                        <mat-icon class="text-[16px] w-[16px] h-[16px]">
+                        <mat-icon class="material-symbols-outlined text-[16px] w-[16px] h-[16px]">
                             {{ getIcone(rotulosSelecionados[i]) }}
                         </mat-icon>
                     </div>
@@ -28,7 +28,22 @@
         </div>
         <div>
             <h2 class="bg-yellow-500 border-b-2">Alinhamento</h2>
-            <textarea class="flex-1 w-full p-2 outline-none resize-none bg-transparent" placeholder="Descreva seu alinhamento..."></textarea>
+            <textarea class="flex w-full h-32 p-2 resize-none" placeholder="Descreva seu alinhamento..."></textarea>
         </div>
+        <div class="border-t-2 border-r-2 bg-green-700">
+            <p class="border-b-2">Espécie</p>
+            <select class="bg-white w-full text-center">
+                <option>ESPÉCIES</option>
+            </select>
+        </div>
+        <div class="border-t-2 bg-purple-500">
+            <p class="border-b-2">Agouro</p>
+            <select class="bg-white w-full text-center">
+                <option>AGOUROS</option>
+            </select>
+        </div>
+    </div>
+    <div class="bg-yellow-500 border-t-2">
+        Títulos
     </div>
 </div>
