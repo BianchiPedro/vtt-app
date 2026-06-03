@@ -129,9 +129,11 @@ export class SideBarRight {
     if (type === 'Personagem') {
       this.dialog.open(CharacterSheetModal, {
         hasBackdrop: false,
-        width: '800px',
-        maxWidth: '100vw',
-        panelClass: 'custom-dialog-container'
+        width: '80vw',        // Ocupa 90% da largura da tela do mestre inicialmente
+        height: '85vh',       // Ocupa 85% da altura da tela inicialmente
+        maxWidth: '95vw',     // Permite expandir quase até a borda da tela
+        maxHeight: '95vh',    // Permite expandir quase até o topo/fundo
+        panelClass: 'custom-vtt-dialog' // Classe para podermos aplicar o CSS de resize
       });
     } else if (type === 'NPC') {
       console.log('Ainda vamos criar a lógica do NPC!');
