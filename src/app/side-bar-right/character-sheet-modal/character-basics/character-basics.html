@@ -74,10 +74,9 @@
         </div>
         
         <div class="flex flex-col gap-[1px] bg-black">
-            <input class="w-full h-6 px-2 text-center outline-none bg-white">
-            <input class="w-full h-6 px-2 text-center outline-none bg-white">
-            <input class="w-full h-6 px-2 text-center outline-none bg-white">
-            <input class="w-full h-6 px-2 text-center outline-none bg-white">
+            @for (item of [0, 1, 2, 3, 4]; track $index) {
+            <input class="w-full h-4 px-2 text-center outline-none bg-white">
+            }
         </div>
     </div>
 

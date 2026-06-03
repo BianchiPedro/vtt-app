@@ -1,7 +1,7 @@
-<div class="bg-zinc-300 w-full h-full shadow-2xl rounded-sm border-12 border-neutral-900 overflow-hidden" 
+<div class="bg-zinc-300 w-full h-full shadow-2xl rounded-sm border-12 border-neutral-900 overflow-hidden flex flex-col" 
      cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     
-    <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2" cdkDragHandle>
+    <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2 flex-none" cdkDragHandle>
         <div>
             <button class="flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
                 <mat-icon class="material-symbols-outlined">cell_tower</mat-icon>
@@ -24,7 +24,14 @@
         </div>
     </div>
     
-    <app-character-basics/>
-    <app-character-relations/>
-    
+    <div class="flex-1 overflow-y-auto p-4 flex flex-row flex-wrap gap-4 items-start content-start relative bg-zinc-300">
+        
+        <app-character-basics></app-character-basics>
+        <app-character-relations></app-character-relations>
+        <app-character-backpack></app-character-backpack>
+        <app-character-theme></app-character-theme>
+        <app-character-theme></app-character-theme>
+        <app-character-theme></app-character-theme>
+        
+    </div>
 </div>

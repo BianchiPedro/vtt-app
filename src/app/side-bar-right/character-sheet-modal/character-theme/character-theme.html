@@ -1,0 +1,114 @@
+<div class="flex flex-col w-[400px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-800 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+    
+    <div class="flex flex-col bg-yellow-800 gap-[2px] p-2">
+        <h1 class="text-white text-base tracking-widest font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>Tema de Personagem</h1>
+        <input class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold rounded-md">
+    </div>
+
+    <div class="grid grid-cols-2 gap-[2px] bg-black text-white">
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black">
+                <p class="bg-yellow-800 py-1 font-bold">Aspecto</p>
+                <p class="bg-yellow-800 py-1 font-bold">Mod</p>
+            </div>
+            
+            @for (linha of [0, 1, 2, 3, 4, 5]; track $index) {
+                <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black h-5 text-black">
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="grid grid-cols-[2.5rem_1fr] gap-[1px] bg-black">
+                <p class="bg-yellow-800 py-1 font-bold">Cla.</p>
+                <p class="bg-yellow-800 py-1 font-bold">Habilidades</p>
+            </div>
+            
+            @for (linha of [0, 1, 2, 3, 4, 5]; track $index) {
+                <div class="grid grid-cols-[2.5rem_1fr] gap-[1px] bg-black h-5 text-black">
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-1 outline-none text-xs text-center font-bold bg-gray-50">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black">
+                <p class="bg-yellow-800 py-1 font-bold">Defeitos</p>
+                <p class="bg-yellow-800 py-1 font-bold">Mod</p>
+            </div>
+            
+            @for (linha of [0, 1, 2, 3]; track $index) {
+                <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black h-5 text-black">
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="grid grid-cols-[1fr_2.5rem_2.5rem] gap-[1px] bg-black">
+                <p class="bg-yellow-800 py-1 font-bold">Treino/Estudos</p>
+                <p class="bg-yellow-800 py-1 font-bold">SA</p>
+                <p class="bg-yellow-800 py-1 font-bold">SN</p>
+            </div>
+            
+            @for (linha of [0, 1, 2, 3]; track $index) {
+                <div class="grid grid-cols-[1fr_2.5rem_2.5rem] gap-[1px] bg-black h-5 text-black">
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+        <div class="grid grid-cols-[1fr] gap-[1px] text-white border-t-[2px] border-black">
+        <p class="py-1 font-bold bg-yellow-800 tracking-widest">OBJETIVO</p>
+        <textarea class="bg-white text-black w-full h-12 p-2 resize-none outline-none text-xs" placeholder="Descreva seu objetivo para esse Tema..."></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-[2px] bg-black text-white border-t-[1px] border-black">
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            <p class="py-1 font-bold bg-yellow-800">Abandono</p>
+            
+            <div class="grid grid-cols-6 gap-[4px] bg-yellow-800 p-2 flex-1 items-center justify-items-center">
+                @for (item of [0, 1, 2, 3, 4, 5]; track $index) {
+                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
+                }
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-[1px] bg-black">
+            <p class="py-1 font-bold bg-yellow-800">Avanço</p>
+            
+            <div class="grid grid-cols-6 gap-[4px] bg-yellow-800 p-2 flex-1 items-center justify-items-center">
+                @for (item of [0, 1, 2, 3, 4, 5]; track $index) {
+                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
+                }
+            </div>
+        </div>
+
+    </div>
+</div> 
