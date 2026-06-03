@@ -1,8 +1,9 @@
-<div class="bg-white w-[800px] h-[800px] shadow-2xl rounded-sm border-12 border-neutral-900 overflow-hidden " 
-    cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2">
+<div class="bg-zinc-300 w-[800px] h-[800px] shadow-2xl rounded-sm border-12 border-neutral-900 overflow-hidden" 
+     cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    
+    <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2" cdkDragHandle>
         <div>
-            <button class=" flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
+            <button class="flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
                 <mat-icon class="material-symbols-outlined">cell_tower</mat-icon>
             </button>
         </div>
@@ -11,7 +12,7 @@
             <p class="text-white">PERSONAGEM</p>
         </div>
         <div class="flex flex-row gap-2">
-            <button class=" flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
+            <button class="flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
                 <mat-icon class="material-symbols-outlined">manage_accounts</mat-icon>
             </button>
             <button class="flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
@@ -21,7 +22,8 @@
                 <mat-icon class="material-symbols-outlined">close</mat-icon>
             </button>
         </div>
-        </div>
+    </div>
+    
     <div class="text-black text-center text-2xl">
         <app-character-basics/>
     </div>

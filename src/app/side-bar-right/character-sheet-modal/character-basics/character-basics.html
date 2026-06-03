@@ -1,49 +1,84 @@
-<div class="flex flex-col text-center border-3 border-black w-90 bg-white text-xs my-2 mx-2">
-    <div class="bg-black text-white py-1">
-        <h1>NOME DO PERSONAGEM</h1>
+<div class="flex flex-col text-center bg-black gap-[2px] border-[3px] border-black rounded-xl w-90 text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl 
+    hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+    
+    <div class="flex flex-col bg-sky-900 gap-[2px] cursor-grab active:cursor-grabbing">
+        <h1 class="text-white py-1 text-xl tracking-widest font-bold" cdkDragHandle>NOME DO PERSONAGEM</h1>
         <input class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold">
     </div>
-    <div class="grid grid-cols-2 text-center font-medium">
-        <div class="border-r-2">
-            <h2 class="bg-orange-400 border-b-2">Rótulos de Personagem</h2>
-                @for (rotulo of [0, 1, 2, 3]; track rotulo; let i = $index) {
-                <div class="flex flex-row items-center border-b border-black last:border-b-0 h-8">
-                    
-                    <select [(ngModel)]="rotulosSelecionados[i]"
-                            class="flex-1 h-full px-1 outline-none bg-transparent appearance-none cursor-pointer">
-                        <option value="" disabled selected></option>
-                        @for (opcao of opcoesRotulos; track opcao.nome) {
-                            <option [value]="opcao.nome">{{ opcao.nome }}</option>
-                        }
-                    </select>
 
-                    <div class="w-8 h-full flex items-center justify-center border-l border-black bg-gray-100">
-                        <mat-icon class="material-symbols-outlined text-[16px] w-[16px] h-[16px]">
-                            {{ getIcone(rotulosSelecionados[i]) }}
-                        </mat-icon>
+    <div class="grid grid-cols-2 bg-black gap-[2px] font-medium">
+        
+        <div class="flex flex-col bg-white">
+            <h2 class="bg-sky-900 py-1 text-white font-bold">Rótulos de Personagem</h2>
+            
+            <div class="flex flex-col gap-[1px] bg-black flex-1">
+                @for (categoria of caracteristicasRotulos; track categoria) {
+                    <div class="grid grid-cols-[3.5rem_1fr_2rem] gap-[1px] bg-black items-center h-6">
+                        
+                        <div class="h-full flex items-center justify-center bg-gray-200 font-bold text-[10px] text-gray-700 select-none">
+                            {{ categoria }}
+                        </div>
+
+                        <div class="bg-white h-full flex items-center">
+                            <select [(ngModel)]="rotulosSelecionados[categoria]"
+                                    class="w-full h-full px-1 outline-none bg-transparent appearance-none cursor-pointer text-center font-normal">
+                                <option value="" disabled selected></option>
+                                @for (opcao of bancoDeDadosRotulos[categoria]; track opcao.nome) {
+                                    <option [value]="opcao.nome">{{ opcao.nome }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="h-full flex items-center justify-center bg-gray-50 text-black">
+                            <mat-icon class="material-symbols-outlined text-[16px] w-[16px] h-[16px]">
+                                {{ getIcone(categoria, rotulosSelecionados[categoria]) }}
+                            </mat-icon>
+                        </div>
                     </div>
-                    
-                </div>
-            }
+                }
+            </div>
         </div>
-        <div>
-            <h2 class="bg-yellow-500 border-b-2">Alinhamento</h2>
-            <textarea class="flex w-full h-32 p-2 resize-none" placeholder="Descreva seu alinhamento..."></textarea>
+
+        <div class="flex flex-col bg-white h-full">
+            <h2 class="bg-sky-900 py-1 text-white font-bold">Alinhamento</h2>
+            <textarea class="w-full flex-1 p-2 resize-none outline-none text-xs" placeholder="Descreva seu alinhamento..."></textarea>
         </div>
-        <div class="border-t-2 border-r-2 bg-green-700">
-            <p class="border-b-2">Espécie</p>
-            <select class="bg-white w-full text-center">
-                <option>ESPÉCIES</option>
+
+        <div class="flex flex-col bg-white">
+            <p class="bg-sky-900 py-0.5 text-white font-bold">Espécie</p>
+            <select class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
+                <option></option>
+                <option>Humano</option>
+                <option>Elfo</option>
+                <option>Anão</option>
+                <option>Orc</option>
+                <option>Senzu</option>
+                <option>Tritão</option>
+                <option>Valkiria</option>
             </select>
         </div>
-        <div class="border-t-2 bg-purple-500">
-            <p class="border-b-2">Agouro</p>
-            <select class="bg-white w-full text-center">
-                <option>AGOUROS</option>
+
+        <div class="flex flex-col bg-white">
+            <p class="bg-sky-900 py-0.5 text-white font-bold">Agouro</p>
+            <select class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
+                <option></option>
+                <option>Vampiro</option>
+                <option>Lobisomen</option>
+                <option>Undead</option>
             </select>
         </div>
+
+    </div> <div class="flex flex-col bg-black gap-[2px]">
+        <div class="bg-sky-900 py-1">
+            <p class="text-white font-bold tracking-widest">TÍTULOS</p>
+        </div>
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            <input class="w-full h-6 px-2 text-center outline-none bg-white">
+            <input class="w-full h-6 px-2 text-center outline-none bg-white">
+            <input class="w-full h-6 px-2 text-center outline-none bg-white">
+            <input class="w-full h-6 px-2 text-center outline-none bg-white">
+        </div>
     </div>
-    <div class="bg-yellow-500 border-t-2">
-        Títulos
-    </div>
+
 </div>

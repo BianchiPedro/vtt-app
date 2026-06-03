@@ -1,0 +1,4 @@
+.cdk-drag-preview {
+  transition: none !important;
+  transform: scale(1.02) !important; /* Dica extra: deixa o cartão ligeiramente maior enquanto voa pela tela! */
+}
