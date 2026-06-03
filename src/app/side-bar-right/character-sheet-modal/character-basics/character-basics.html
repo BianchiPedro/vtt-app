@@ -68,13 +68,27 @@
             </select>
         </div>
 
-    </div> <div class="flex flex-col bg-black gap-[2px]">
+    </div> 
+    
+    <div class="flex flex-col bg-black gap-[2px]">
         <div class="bg-sky-900 py-1">
             <p class="text-white font-bold tracking-widest">TÍTULOS</p>
         </div>
         
         <div class="flex flex-col gap-[1px] bg-black">
             @for (item of [0, 1, 2, 3, 4]; track $index) {
+            <input class="w-full h-4 px-2 text-center outline-none bg-white">
+            }
+        </div>
+    </div>
+
+    <div class="flex flex-col bg-black gap-[2px]">
+        <div class="bg-sky-900 py-1">
+            <p class="text-white font-bold tracking-widest">Doms</p>
+        </div>
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            @for (item of [0, 1, 2]; track $index) {
             <input class="w-full h-4 px-2 text-center outline-none bg-white">
             }
         </div>

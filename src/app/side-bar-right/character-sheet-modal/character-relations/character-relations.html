@@ -1,4 +1,4 @@
-<div class="flex flex-col w-90 text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-400 ease-in-out overflow-hidden" cdkDrag>
+<div class="flex flex-col w-[350px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
     
     <div class="flex flex-col bg-indigo-900 gap-[2px]">
         <h1 class="text-white py-1 tracking-widest text-base font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>Laços e Promessas</h1>
@@ -8,12 +8,36 @@
         
         <div class="flex flex-col gap-[1px] bg-black">
             <p class="bg-indigo-900 py-1 font-bold">Nome</p>
-            @for (item of [0, 1, 2, 3, 4]; track $index) {
-                <div class="bg-white h-7 flex items-center">
-                    <input type="text" class="w-full h-full px-2 outline-none text-black text-sm text-center">
+            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
+                <div class="bg-white h-5 flex items-center">
+                    <input type="text" class="w-full h-full px-2 outline-none text-black text-xs text-center">
                 </div>
             }
-            <div class="bg-indigo-900 flex-1 flex items-center justify-center font-bold min-h-[2rem]">
+        </div>
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black">
+                <p class="bg-indigo-900 py-1 font-bold">Laço</p>
+                <p class="bg-indigo-900 py-1 font-bold">Niv.</p>
+            </div>
+            
+            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
+                <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
+                    <div class="bg-white h-full flex items-center">
+                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    </div>
+                    <div class="bg-white h-full flex items-center">
+                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="grid grid-cols-[1fr_6rem] gap-[2px] bg-black text-white border-t-[1px] border-black">
+        
+        <div class="flex flex-col gap-[1px] bg-black">
+            <div class="bg-indigo-900 flex items-center justify-center font-bold h-6">
                 <p>Promessas</p>
             </div>
             @for (item of [0, 1, 2, 3, 4]; track $index) {
@@ -24,35 +48,17 @@
         </div>
         
         <div class="flex flex-col gap-[1px] bg-black">
-            
-            <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black">
-                <p class="bg-indigo-900 py-1 font-bold">Laço</p>
-                <p class="bg-indigo-900 py-1 font-bold">Niv.</p>
-            </div>
-            
-            @for (item of [0, 1, 2, 3, 4]; track $index) {
-                <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-7 text-black">
-                    <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-sm text-center">
-                    </div>
-                    <div class="bg-white h-full flex items-center text-2xl">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
-                    </div>
-                </div>
-            }
-            <div class="bg-indigo-900 flex-1 flex items-center justify-center font-bold min-h-[2rem]">
+            <div class="bg-indigo-900 flex items-center justify-center font-bold h-6">
                 <p>Progresso</p>
             </div>
             @for (item of [0, 1, 2, 3, 4]; track $index) {
-                <div class="bg-indigo-900 h-7 flex items-center gap-[3px] justify-center">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white">
+                <div class="bg-indigo-900 h-7 flex flex-row items-center justify-center gap-[6px] px-1">
+                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
+                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
+                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
                 </div>
             }
         </div>
+
     </div>
 </div>
