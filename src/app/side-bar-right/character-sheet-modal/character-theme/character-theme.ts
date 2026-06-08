@@ -9,4 +9,20 @@ import { MatIconModule } from '@angular/material/icon';
     imports: [CommonModule, FormsModule, MatIconModule, CdkDragHandle, CdkDrag],
   templateUrl: './character-theme.html',
 })
-export class CharacterTheme {}
+export class CharacterTheme {
+
+  modValues: number[]=[0,0,0,0,0,0]
+
+  getIconbyMod(valor: number): string {
+    const iconMap: {[key:number]: string} = {
+      1: 'eco',
+      2: 'hardware',
+      3: 'swords',
+      4: 'castle',
+      5: 'crown',
+      6: 'flare'
+    }
+
+    return iconMap[valor] || 'horizontal_rule';
+  }
+}
