@@ -1,4 +1,4 @@
-<div class="flex flex-col w-[350px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-800 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+<div class="flex flex-col w-[375px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-800 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
     
     <div class="flex flex-col bg-yellow-900 gap-[2px] p-2">
         <h1 class="text-white text-base tracking-widest font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>Tema de Personagem</h1>
@@ -34,13 +34,24 @@
             
             @for (linha of [0, 1, 2, 3, 4, 5]; track $index; let i = $index) {
                 <div class="grid grid-cols-[2.5rem_1fr] gap-[1px] bg-black h-5 text-black">
-                    <div class="bg-gray-100 h-full flex items-center justify-center text-zinc-800 select-none">
+                    <div class="bg-white h-full flex items-center justify-center text-zinc-800 select-none">
                         <mat-icon class="material-symbols-outlined text-[16px] w-[16px] h-[16px]">
                             {{ getIconbyMod(modValues[i]) }}
                         </mat-icon>
                     </div>
-                    <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                    
+                    <div class="bg-white h-full flex items-center px-1 font-sans">
+                        <mat-select multiple 
+                                    [(ngModel)]="habilidadesSelecionadas[i]"
+                                    [disabled]="!modValues[i] || modValues[i] < 3"
+                                    class="w-full text-center text-[11px] outline-none border-none cursor-pointer"
+                                    placeholder="Habilidades..."
+                                    style="border: none !important; box-shadow: none !important;">
+                            
+                            @for (opcao of listaHabilidadesDisponiveis; track opcao) {
+                                <mat-option [value]="opcao" class="text-xs">{{ opcao }}</mat-option>
+                            }
+                        </mat-select>
                     </div>
                 </div>
             }

@@ -1,4 +1,4 @@
-<div class="flex flex-col w-[620px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+<div class="flex flex-col w-[320px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
     
     <div class="flex flex-col bg-green-900 gap-[2px]">
         <h1 class="text-white py-1 tracking-widest text-base font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>
@@ -6,9 +6,9 @@
         </h1>
     </div>
 
-    <div class="grid grid-cols-3 gap-[2px] bg-black text-white">
+    <div class="grid grid-cols-2 gap-[2px] bg-black text-white">
 
-        @for (coluna of [0, 1, 2]; track $index) {
+        @for (coluna of [0, 1]; track $index) {
             
             <div class="flex flex-col gap-[1px] bg-black">
                 
@@ -17,7 +17,7 @@
                     <p class="bg-green-900 py-1 font-bold">Qtd</p>
                 </div>
                 
-                @for (linha of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]; track $index) {
+                @for (linha of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]; track $index) {
                     <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
                         <div class="bg-white h-full flex items-center">
                             <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">

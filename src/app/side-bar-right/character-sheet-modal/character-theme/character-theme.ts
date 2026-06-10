@@ -2,11 +2,13 @@ import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-character-theme',
-    imports: [CommonModule, FormsModule, MatIconModule, CdkDragHandle, CdkDrag],
+    imports: [CommonModule, FormsModule, MatIconModule, CdkDragHandle, CdkDrag, MatSelectModule, MatFormFieldModule],
   templateUrl: './character-theme.html',
 })
 export class CharacterTheme {
@@ -25,4 +27,18 @@ export class CharacterTheme {
 
     return iconMap[valor] || 'horizontal_rule';
   }
+
+  listaHabilidadesDisponiveis = [
+    'Rapidez',
+    'Poderoso',
+    'Reliquário',
+    'Sortudo',
+    'Maestria',
+    'Duplicidade',
+    'Defensivo'
+  ];
+
+  habilidadesSelecionadas: string[][] = [
+    [], [], [], [], [], []
+  ];
 }
