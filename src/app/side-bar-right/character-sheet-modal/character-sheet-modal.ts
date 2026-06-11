@@ -13,6 +13,9 @@ import { CharacterStatus } from "./character-status/character-status";
   templateUrl: './character-sheet-modal.html',
 })
 export class CharacterSheetModal {
+
+  activeTab = 'main';
+
 closeModal() {
   
 }

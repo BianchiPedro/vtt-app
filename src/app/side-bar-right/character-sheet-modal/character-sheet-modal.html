@@ -2,9 +2,17 @@
      cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     
     <div class="flex flex-row items-center justify-between cursor-grab active:cursor-grabbing w-full bg-zinc-950 px-4 py-2 flex-none" cdkDragHandle>
-        <div>
+        <div class="flex flex-row gap-2">
             <button class="flex items-center justify-center bg-sky-950 hover:bg-sky-800 transition rounded-md p-1 text-white">
                 <mat-icon class="material-symbols-outlined">cell_tower</mat-icon>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-1 text-white" (click)="activeTab = 'main'"
+                [class]="activeTab === 'main' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>Ficha Principal</p>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg  p-1 text-white" (click)="activeTab = 'second'"
+                [class]="activeTab === 'second' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>Background e Notas</p>
             </button>
         </div>
         <div class="flex flex-row items-center justify-center gap-3 font-bold text-lg ml-20">
@@ -24,8 +32,9 @@
         </div>
     </div>
     
-    <div class="flex-1 overflow-y-auto p-4 flex flex-row flex-wrap gap-4 items-start content-start relative bg-zinc-300">
-        
+    <div class="flex-1 overflow-y-auto p-4 flex flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300">
+        @if (activeTab === 'main') {
+
         <app-character-basics></app-character-basics>
         <app-character-backpack></app-character-backpack>
         <app-character-relations></app-character-relations>
@@ -34,5 +43,12 @@
         <app-character-theme></app-character-theme>
         <app-character-theme></app-character-theme>
 
+        }
+
+        @if (activeTab === 'second') {
+            <div class="w-full text-white text-center">
+            <h1>Aqui vai nascer meu componente de Background!</h1>
+        </div>
+        }
     </div>
 </div>
