@@ -1,0 +1,53 @@
+<div class="flex flex-col w-[700px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+    
+    <div class="flex flex-col bg-indigo-950 gap-[2px]">
+        <h1 class="text-white py-1 tracking-widest text-sm font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>
+            NOTES
+        </h1>
+        
+        <div class="flex flex-row gap-2 overflow-hidden">
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-2 text-white ml-4" (click)="page = '1'"
+                [class]="page === '1' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>1º</p>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-2 text-white" (click)="page = '2'"
+                [class]="page === '2' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>2º</p>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-2 text-white" (click)="page = '3'"
+                [class]="page === '3' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>3º</p>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-2 text-white" (click)="page = '4'"
+                [class]="page === '4' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>4º</p>
+            </button>
+            <button class="flex items-center justify-center hover:bg-sky-800 transition rounded-t-lg p-2 text-white" (click)="page = '5'"
+                [class]="page === '5' ? 'bg-sky-900 text-neutral-900 font-bold pb-2 translate-y-2' : 'bg-zinc-700 text-gray-400 translate-y-4' ">
+                <p>5º</p>
+            </button>
+        </div>
+
+        @if (page === '1') {
+            <textarea class="flex flex-col bg-white text-black text-base font-serif h-165 mx-2 mb-2 rounded-md p-4 outline-none focus:ring-2 focus:ring-amber-700 focus:border-amber-700 transition-all">
+            </textarea>
+        }
+        @if (page === '2') {
+            <textarea class="flex flex-col bg-white text-black text-base font-serif h-165 mx-2 mb-2 rounded-md p-4 outline-none focus:ring-2 focus:ring-amber-700 focus:border-amber-700 transition-all">
+            </textarea> 
+        }
+        @if (page === '3') {
+            <textarea class="flex flex-col bg-white text-black text-base font-serif h-165 mx-2 mb-2 rounded-md p-4 outline-none focus:ring-2 focus:ring-amber-700 focus:border-amber-700 transition-all">
+            </textarea> 
+        }
+        @if (page === '4') {
+            <textarea class="flex flex-col bg-white text-black text-base font-serif h-165 mx-2 mb-2 rounded-md p-4 outline-none focus:ring-2 focus:ring-amber-700 focus:border-amber-700 transition-all">
+            </textarea> 
+        }
+        @if (page === '5') {
+            <textarea class="flex flex-col bg-white text-black text-base font-serif h-165 mx-2 mb-2 rounded-md p-4 outline-none focus:ring-2 focus:ring-amber-700 focus:border-amber-700 transition-all">
+            </textarea> 
+        }
+
+    </div>
+</div>

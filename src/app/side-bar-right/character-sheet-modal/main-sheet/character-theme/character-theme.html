@@ -33,7 +33,7 @@
             </div>
             
             @for (linha of [0, 1, 2, 3, 4, 5]; track $index; let i = $index) {
-                <div class="grid grid-cols-[2.5rem_1fr] gap-[1px] bg-black h-5 text-black">
+                <div class="grid grid-cols-[2.5rem_1fr] gap-[1px] bg-black h-5 text-black overflow-hidden">
                     <div class="bg-white h-full flex items-center justify-center text-zinc-800 select-none">
                         <mat-icon class="material-symbols-outlined text-[16px] w-[16px] h-[16px]">
                             {{ getIconbyMod(modValues[i]) }}
@@ -121,5 +121,4 @@
             </div>
         </div>
     </div>
-
 </div>
