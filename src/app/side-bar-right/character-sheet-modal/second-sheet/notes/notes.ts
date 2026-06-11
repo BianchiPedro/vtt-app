@@ -1,6 +1,6 @@
 import { CdkDragHandle, CdkDrag } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,6 +11,77 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class Notes {
 
-  page = '1';
+  activePageId = 1;
+  editTabId: number | null = null;
+
+  pages = [
+    { id: 1, name: '1º', content: ''},
+    { id: 2, name: '2º', content: ''},
+    { id: 3, name: '3º', content: ''},
+    { id: 4, name: '4º', content: ''},
+    { id: 5, name: '5º', content: ''},
+    { id: 6, name: '6º', content: ''},
+    { id: 7, name: '7º', content: ''},
+    { id: 8, name: '8º', content: ''},
+    { id: 9, name: '9º', content: ''}
+  ];
+
+  showContextMenu = false;
+  menuX = 0;
+  menuY = 0;
+  targetPageId: number | null = null;
+
+  openMenu(event: MouseEvent, pageId: number) {
+    event.preventDefault();
+    this.showContextMenu = true;
+    this.menuX = event.clientX;
+    this.menuY = event.clientY;
+    this.targetPageId = pageId;
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeMenu(event: Event) {
+    this.showContextMenu = false;
+  }
+  
+  startRename() {
+    this.editTabId = this.targetPageId;
+    this.showContextMenu = false;
+  }
+
+  saveName() {
+    this.editTabId = null;
+  }
+
+  createPage() {
+    const newId = this.pages.length > 0 ? Math.max(...this.pages.map(p => p.id)) + 1 : 1;
+    this.pages.push({ id: newId, name: `${newId}`, content: ''});
+
+    this.activePageId = newId;
+    this.showContextMenu = false;
+  }
+
+  deletePage() {
+    if (this.targetPageId) {
+      this.pages = this.pages.filter(p => p.id != this.targetPageId);
+
+      if (this.activePageId === this.targetPageId) {
+        this.activePageId = this.pages.length > 0 ? this.pages[0].id : 0;
+      }
+    }
+    this.showContextMenu = false;
+  }
+
+  getActiveContent(): string {
+    const page = this.pages.find(p => p.id === this.activePageId);
+    return page ? page.content : '';
+  }
+
+  setActiveContent(newText: string) {
+    const page = this.pages.find(p => p.id === this.activePageId);
+    if (page) {
+      page.content = newText;
+    }
+  }
 
 }
