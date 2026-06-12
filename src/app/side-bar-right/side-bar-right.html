@@ -74,6 +74,7 @@
             </div>
 
             //CHARACTERS TAB
+
         </mat-tab>
                 <mat-tab>
             <ng-template mat-tab-label>
@@ -109,7 +110,16 @@
                             
                             <div class="pl-8 pb-3 pt-1 border-l border-neutral-700 ml-[0.6rem] mt-1 flex flex-col gap-2">
                                 
-                                <span class="text-gray-500 text-xs italic">Vazio...</span>
+                                @if (folder.items.length === 0) {
+                                    <span class="text-gray-500 text-xs italic">Vazio...</span>
+                                } @else {
+                                    @for (item of folder.items; track item.id) {
+                                        <div class="flex flex-row items-center gap-2 cursor-pointer hover:text-sky-400 transition-colors">
+                                            <mat-icon class="text-sm">person</mat-icon>
+                                            <span class="text-sm font-bold">{{ item.name }}</span>
+                                        </div>
+                                    }
+                                }
                                 
                             </div>
                             
@@ -121,7 +131,6 @@
             </div>
         </div>
 
-            // MUSIC TAB
         </mat-tab>
                 <mat-tab>
             <ng-template mat-tab-label>

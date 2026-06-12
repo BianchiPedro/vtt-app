@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { InvokeFunctionExpr } from '@angular/compiler';
 import { CharacterSheetModal } from './character-sheet-modal/character-sheet-modal';
+import { CharacterService } from './character-sheet-modal/character-sheet.service';
 
 
 export interface Folders {
@@ -24,6 +25,7 @@ export interface Folders {
 export class SideBarRight {
   
   dialog = inject(MatDialog);
+  private characterService = inject(CharacterService);
 
   // CHAT COMPONENT --------------------------------------------------------------------------------------
 
@@ -89,7 +91,7 @@ export class SideBarRight {
         outcomeText = 'SUCESSO PARCIAL';
         colorClass = 'border-blue-600';
         textColor = 'text-blue-600';
-      } else if (total <= 24) {
+      } else if (total <= 23) {
         outcomeText = 'SUCESSO';
         colorClass = 'border-green-600';
         textColor = 'text-green-600';
@@ -120,10 +122,30 @@ export class SideBarRight {
   // CREATING SHEETS -----------------------------------------------------------------------------
 
   folders: Folders[] = [
-    {name: "Personagens (PJ's)", isOpen: false, items: []},
+    {name: "Personagens (PJ)", isOpen: false, items: []},
     {name: "NPC's", isOpen: false, items: []},
     {name: "Folhetos", isOpen: false, items: []}
   ];
+
+ngOnInit() {
+    this.characterService.characterSaved$.subscribe(character => {
+      // Adicionamos um log aqui para você ver a mágica chegando na Sidebar!
+      console.log('A Sidebar ouviu o megafone! Personagem recebido:', character);
+
+      // JEITO À PROVA DE BALAS: Pega a primeira pasta do array (índice 0), não importa o nome dela!
+      const charFolder = this.folders[0];
+
+      if (charFolder) {
+        // Adiciona o personagem na lista
+        charFolder.items.push(character);
+        
+        // Abre a pasta para mostrar o resultado
+        charFolder.isOpen = true; 
+        
+        console.log('Personagem guardado com sucesso na pasta:', charFolder.name);
+      }
+    });
+  }
 
   createitem(type: string) {
     if (type === 'Personagem') {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon'; 
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { CharacterBasicsData } from '../../character-model';
 
 @Component({
   selector: 'app-character-basics',
@@ -12,15 +13,42 @@ import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
   styleUrl: './character-basics.css'
 })
 export class CharacterBasics {
+
+  characterName = '';
+
   caracteristicasRotulos = ['Idade', 'Tamanho', 'Renome', 'Tesouro'];
-  
-  // Guardamos as escolhas do usuário usando as chaves em vez de índices numéricos
+
   rotulosSelecionados: { [key: string]: string } = {
     'Idade': '',
     'Tamanho': '',
     'Renome': '',
     'Tesouro': ''
   };
+
+  basicsData: CharacterBasicsData = {
+    idade: '',
+    tamanho: '',
+    renome: '',
+    tesouro: '',
+    especie: '',
+    agouro: '',
+    alinhamento: '',
+    titulos: ['', '', '', '', ''], // 5 linhas em branco para o HTML ler
+    doms: ['', '', '', '', '']     // 5 linhas em branco para o HTML ler
+  };
+
+  exportBasicsData() {
+
+    this.basicsData.idade = this.rotulosSelecionados['Idade'] || '';
+    this.basicsData.tamanho = this.rotulosSelecionados['Tamanho'] || '';
+    this.basicsData.renome = this.rotulosSelecionados['Renome'] || '';
+    this.basicsData.tesouro = this.rotulosSelecionados['Tesouro'] || ''
+
+    return {
+      nome: this.characterName,
+      dados: this.basicsData
+    };
+  }
 
   // O mapa definitivo de opções e ícones para cada caixinha da ficha!
   bancoDeDadosRotulos: { [key: string]: { nome: string, icone: string }[] } = {

@@ -3,7 +3,7 @@
     
     <div class="flex flex-col bg-sky-900 gap-[2px] cursor-grab active:cursor-grabbing">
         <h1 class="text-white py-1 text-base tracking-widest font-bold" cdkDragHandle>NOME DO PERSONAGEM</h1>
-        <input class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold">
+        <input type="text" [(ngModel)]="characterName" class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold">
     </div>
 
     <div class="grid grid-cols-2 bg-black gap-[2px] font-medium">
@@ -41,30 +41,30 @@
 
         <div class="flex flex-col bg-white h-full">
             <h2 class="bg-sky-900 py-1 text-white font-bold">Alinhamento</h2>
-            <textarea class="w-full flex-1 p-2 resize-none outline-none text-xs" placeholder="Descreva seu alinhamento..."></textarea>
+            <textarea [(ngModel)]="basicsData.alinhamento" class="w-full flex-1 p-2 resize-none outline-none text-xs" placeholder="Descreva seu alinhamento..."></textarea>
         </div>
 
         <div class="flex flex-col bg-white">
             <p class="bg-sky-900 py-0.5 text-white font-bold">Espécie</p>
-            <select class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
+            <select [(ngModel)]="basicsData.especie" class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
                 <option></option>
-                <option>Humano</option>
-                <option>Elfo</option>
-                <option>Anão</option>
-                <option>Orc</option>
-                <option>Senzu</option>
-                <option>Tritão</option>
-                <option>Valkiria</option>
+                <option value="Humano">Humano</option>
+                <option value="Elfo">Elfo</option>
+                <option value="Anão">Anão</option>
+                <option value="Orc">Orc</option>
+                <option value="Senzu">Senzu</option>
+                <option value="Tritão">Tritão</option>
+                <option value="Valkiria">Valkiria</option>
             </select>
         </div>
 
         <div class="flex flex-col bg-white">
             <p class="bg-sky-900 py-0.5 text-white font-bold">Agouro</p>
-            <select class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
+            <select [(ngModel)]="basicsData.agouro" class="bg-white w-full h-7 text-center outline-none cursor-pointer font-normal">
                 <option></option>
-                <option>Vampiro</option>
-                <option>Lobisomen</option>
-                <option>Undead</option>
+                <option value="Vampiro">Vampiro</option>
+                <option value="Lobisomen">Lobisomen</option>
+                <option value="Undead">Undead</option>
             </select>
         </div>
 
@@ -76,8 +76,8 @@
         </div>
         
         <div class="flex flex-col gap-[1px] bg-black">
-            @for (item of [0, 1, 2, 3, 4]; track $index) {
-            <input class="w-full h-4 px-2 text-center outline-none bg-white">
+            @for (item of [0, 1, 2, 3, 4]; track $index; let i = $index) {
+            <input [(ngModel)]="basicsData.titulos[i]" class="w-full h-4 px-2 text-center outline-none bg-white">
             }
         </div>
     </div>
@@ -88,8 +88,8 @@
         </div>
         
         <div class="flex flex-col gap-[1px] bg-black">
-            @for (item of [0, 1, 2]; track $index) {
-            <input class="w-full h-4 px-2 text-center outline-none bg-white">
+            @for (item of [0, 1, 2]; track $index; let i = $index) {
+            <input [(ngModel)]="basicsData.doms[i]"  class="w-full h-4 px-2 text-center outline-none bg-white">
             }
         </div>
     </div>

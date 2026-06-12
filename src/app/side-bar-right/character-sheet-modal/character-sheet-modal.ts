@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import { MatIcon } from "@angular/material/icon";
 import { CharacterBasics } from './main-sheet/character-basics/character-basics';
@@ -8,6 +8,7 @@ import { CharacterTheme } from './main-sheet/character-theme/character-theme';
 import { CharacterStatus } from "./main-sheet/character-status/character-status";
 import { Background } from "./second-sheet/background/background";
 import { Notes } from "./second-sheet/notes/notes";
+import { CharacterService } from './character-sheet.service';
 
 @Component({
   selector: 'app-character-sheet-modal',
@@ -17,8 +18,30 @@ import { Notes } from "./second-sheet/notes/notes";
 export class CharacterSheetModal {
 
   activeTab = 'main';
+  private characterService = inject(CharacterService);
 
-closeModal() {
-  
-}
+  @ViewChild(CharacterBasics) basicsComponent!: CharacterBasics;
+  @ViewChild(CharacterBackpack) backpackComponent!: CharacterBackpack;
+
+  saveCharacter(){
+    const pacoteBasics = this.basicsComponent.exportBasicsData();
+    const pacoteBackpack = this.backpackComponent.exportBackpackData();
+
+    const characterData = {
+      id: Date.now(),
+      name: pacoteBasics.nome || 'Fulano',
+      type: 'Persoangem',
+      basics: pacoteBasics.dados,
+
+      item: pacoteBackpack.dados,
+    };
+
+    this.characterService.saveCharacter(characterData);
+
+    console.log('Dados extraídos', characterData)
+  }
+
+  closeModal() {
+    
+  }
 }

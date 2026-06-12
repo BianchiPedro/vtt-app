@@ -18,12 +18,6 @@ export class Notes {
     { id: 1, name: '1º', content: ''},
     { id: 2, name: '2º', content: ''},
     { id: 3, name: '3º', content: ''},
-    { id: 4, name: '4º', content: ''},
-    { id: 5, name: '5º', content: ''},
-    { id: 6, name: '6º', content: ''},
-    { id: 7, name: '7º', content: ''},
-    { id: 8, name: '8º', content: ''},
-    { id: 9, name: '9º', content: ''}
   ];
 
   showContextMenu = false;
