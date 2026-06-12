@@ -22,10 +22,12 @@ export class CharacterSheetModal {
 
   @ViewChild(CharacterBasics) basicsComponent!: CharacterBasics;
   @ViewChild(CharacterBackpack) backpackComponent!: CharacterBackpack;
+  @ViewChild(CharacterRelations) relationsComponent!: CharacterRelations;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
     const pacoteBackpack = this.backpackComponent.exportBackpackData();
+    const pacoteRelations = this.relationsComponent.exportRelationsData();
 
     const characterData = {
       id: Date.now(),
@@ -34,6 +36,8 @@ export class CharacterSheetModal {
       basics: pacoteBasics.dados,
 
       item: pacoteBackpack.dados,
+
+      relations: pacoteRelations.dados,
     };
 
     this.characterService.saveCharacter(characterData);

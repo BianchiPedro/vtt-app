@@ -10,7 +10,7 @@
             <p class="bg-indigo-900 py-1 font-bold">Nome</p>
             @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
                 <div class="bg-white h-5 flex items-center">
-                    <input type="text" class="w-full h-full px-2 outline-none text-black text-xs text-center">
+                    <input type="text" [(ngModel)]="relationsData.lacos[item].nome" class="w-full h-full px-2 outline-none text-black text-xs text-center">
                 </div>
             }
         </div>
@@ -24,10 +24,10 @@
             @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
                 <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
                     <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="relationsData.lacos[item].laco" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" [(ngModel)]="relationsData.lacos[item].niv" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                     </div>
                 </div>
             }
@@ -42,7 +42,7 @@
             </div>
             @for (item of [0, 1, 2, 3, 4]; track $index) {
                 <div class="bg-white h-7 flex items-center">
-                    <input type="text" class="w-full h-full px-2 outline-none text-black text-sm text-center">
+                    <input type="text" [(ngModel)]="relationsData.promessas[item].descricao" class="w-full h-full px-2 outline-none text-black text-sm text-center" placeholder="Descreva sua promessa...">
                 </div>
             }
         </div>
@@ -53,9 +53,9 @@
             </div>
             @for (item of [0, 1, 2, 3, 4]; track $index) {
                 <div class="bg-indigo-900 h-7 flex flex-row items-center justify-center gap-[6px] px-1">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
+                    <input type="checkbox" [(ngModel)]="relationsData.promessas[item].progresso[0]" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
+                    <input type="checkbox" [(ngModel)]="relationsData.promessas[item].progresso[1]" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
+                    <input type="checkbox" [(ngModel)]="relationsData.promessas[item].progresso[2]" class="w-4 h-4 rounded cursor-pointer accent-indigo-600 bg-white flex-none">
                 </div>
             }
         </div>
