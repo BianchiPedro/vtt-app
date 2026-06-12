@@ -50,6 +50,17 @@ export class CharacterBasics {
     };
   }
 
+
+  loadData(nome: string, dados: CharacterBasicsData) {
+    this.characterName = nome;
+    this.basicsData = dados;
+
+    this.rotulosSelecionados['Idade'] = dados.idade || '';
+    this.rotulosSelecionados['Tamanho'] = dados.tamanho || '';
+    this.rotulosSelecionados['Renome'] = dados.renome || '';
+    this.rotulosSelecionados['Tesouro'] = dados.tesouro || '';
+  }
+
   // O mapa definitivo de opções e ícones para cada caixinha da ficha!
   bancoDeDadosRotulos: { [key: string]: { nome: string, icone: string }[] } = {
     'Idade': [

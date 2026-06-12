@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, inject, ViewChild, ViewChildren, QueryList, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import { MatIcon } from "@angular/material/icon";
 import { CharacterBasics } from './main-sheet/character-basics/character-basics';
@@ -9,16 +9,44 @@ import { CharacterStatus } from "./main-sheet/character-status/character-status"
 import { Background } from "./second-sheet/background/background";
 import { Notes } from "./second-sheet/notes/notes";
 import { CharacterService } from './character-sheet.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-character-sheet-modal',
   imports: [CdkDrag, MatIcon, CharacterBasics, CdkDragHandle, CharacterRelations, CharacterBackpack, CharacterTheme, CharacterStatus, Background, Notes],
   templateUrl: './character-sheet-modal.html',
 })
-export class CharacterSheetModal {
+export class CharacterSheetModal implements AfterViewInit {
+
+  ngAfterViewInit() {
+    if (this.data) {
+      setTimeout(() => {
+        this.basicsComponent.loadData(this.data.name, this.data.basics);
+        this.backpackComponent.backpackData = this.data.item;
+        this.relationsComponent.relationsData = this.data.relations;
+        this.statusComponent.statusData = this.data.status;
+        this.themeComponents.forEach((ThemeComp, index) => {
+          if(this.data.themes[index]) {
+            ThemeComp.themeData = this.data.themes[index];
+          }
+        this.cdr.detectChanges();
+        });
+
+        if (this.backgroundComponent && this.data.backgroundText) {
+          this.backgroundComponent.backgroundText = this.data.backgroundText;
+        }
+        if (this.noteComponent && this.data.notes) {
+          this.noteComponent.pages = this.data.notes;
+        }
+      })
+    }
+  }
 
   activeTab = 'main';
   private characterService = inject(CharacterService);
+  private dialogRef = inject(MatDialogRef<CharacterSheetModal>);
+  private cdr = inject(ChangeDetectorRef);
+  public data = inject(MAT_DIALOG_DATA, { optional: true });
 
   @ViewChild(CharacterBasics) basicsComponent!: CharacterBasics;
   @ViewChild(CharacterBackpack) backpackComponent!: CharacterBackpack;
@@ -38,7 +66,7 @@ export class CharacterSheetModal {
     const listaNotas = this.noteComponent ? this.noteComponent.exportNoteData() : [];
 
     const characterData = {
-      id: Date.now(),
+      id: this.data ? this.data.id : Date.now(),
       name: pacoteBasics.nome || 'Fulano',
       type: 'Persoangem',
       basics: pacoteBasics.dados,
@@ -51,11 +79,12 @@ export class CharacterSheetModal {
     };
 
     this.characterService.saveCharacter(characterData);
+    this.data = characterData;
 
     console.log('Dados extraídos', characterData)
   }
 
   closeModal() {
-    
+    this.dialogRef.close();
   }
 }

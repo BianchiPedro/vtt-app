@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { NotePage } from '../../character-model';
 
 @Component({
   selector: 'app-notes',
@@ -82,5 +81,4 @@ export class Notes {
       page.content = newText;
     }
   }
-
 }

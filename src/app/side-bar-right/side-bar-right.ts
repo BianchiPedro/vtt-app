@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, HostListener } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from "@angular/material/icon";
 import { FormsModule } from '@angular/forms';
@@ -129,19 +129,21 @@ export class SideBarRight {
 
 ngOnInit() {
     this.characterService.characterSaved$.subscribe(character => {
-      // Adicionamos um log aqui para você ver a mágica chegando na Sidebar!
-      console.log('A Sidebar ouviu o megafone! Personagem recebido:', character);
-
-      // JEITO À PROVA DE BALAS: Pega a primeira pasta do array (índice 0), não importa o nome dela!
       const charFolder = this.folders[0];
 
       if (charFolder) {
-        // Adiciona o personagem na lista
-        charFolder.items.push(character);
+
+        if (charFolder) {
+          const indexExist = charFolder.items.findIndex(c => c.id === character.id);
+
+          if (indexExist > -1) {
+            charFolder.items[indexExist] = character;
+          } else {
+            charFolder.items.push(character);
+          }
+        }
         
-        // Abre a pasta para mostrar o resultado
         charFolder.isOpen = true; 
-        
         console.log('Personagem guardado com sucesso na pasta:', charFolder.name);
       }
     });
@@ -164,5 +166,54 @@ ngOnInit() {
     }
   }
 
+  openCharacter(character: any) {
+    this.dialog.open(CharacterSheetModal, {
+      hasBackdrop: false,
+      width: '80vw',
+      height: '95vh',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-vtt-dialog',
+      data: character
+    });
+  }
+
+  showContextMenu = false;
+  menuX = 0;
+  menuY = 0;
+  targetCharacterId: number | null = null;
+  editCharId: number | null = null;
+
+  openContextMenu(event: MouseEvent, characterId: number) {
+    event.preventDefault();
+    this.showContextMenu = true;
+    this.menuX = event.clientX;
+    this.menuY = event.clientY;
+    this.targetCharacterId = characterId;
+  }
+
+  @HostListener('document:click') 
+  closeMenu() {
+    this.showContextMenu = false;
+  }
+  
+  startRenameCharacter() {
+    this.editCharId = this.targetCharacterId;
+    this.showContextMenu = false;
+  }
+
+  saveCharacterName() {
+    this.editCharId = null;
+  }
+
+  deleteCharacter() {
+    if (this.targetCharacterId) {
+      const charFolder = this.folders[0];
+      if (charFolder) {
+        charFolder.items = charFolder.items.filter(c => c.id !== this.targetCharacterId);
+      }
+    }
+    this.showContextMenu = false;
+  }
 
 }
