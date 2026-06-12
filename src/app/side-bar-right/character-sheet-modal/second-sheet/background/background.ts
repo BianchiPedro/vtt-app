@@ -9,4 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, FormsModule, MatIconModule, CdkDragHandle, CdkDrag],
   templateUrl: './background.html',
 })
-export class Background {}
+export class Background {
+
+  backgroundText = '';
+
+  exportBackgroundData() {
+    return this.backgroundText;
+  }
+
+}

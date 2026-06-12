@@ -25,6 +25,8 @@ export class CharacterSheetModal {
   @ViewChild(CharacterRelations) relationsComponent!: CharacterRelations;
   @ViewChild(CharacterStatus) statusComponent!: CharacterStatus;
   @ViewChildren (CharacterTheme) themeComponents!: QueryList<CharacterTheme>;
+  @ViewChild (Background) backgroundComponent!: Background;
+  @ViewChild (Notes) noteComponent!: Notes;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
@@ -32,20 +34,20 @@ export class CharacterSheetModal {
     const pacoteRelations = this.relationsComponent.exportRelationsData();
     const pacoteStatus = this.statusComponent.exportStatusData();
     const pacoteThemes = this.themeComponents.map(theme => theme.exportThemeData());
+    const textoBackground = this.backgroundComponent ? this.backgroundComponent.exportBackgroundData() : '';
+    const listaNotas = this.noteComponent ? this.noteComponent.exportNoteData() : [];
 
     const characterData = {
       id: Date.now(),
       name: pacoteBasics.nome || 'Fulano',
       type: 'Persoangem',
       basics: pacoteBasics.dados,
-
       item: pacoteBackpack.dados,
-
       relations: pacoteRelations.dados,
-
       status: pacoteStatus.dados,
-
-      themes: pacoteThemes
+      themes: pacoteThemes,
+      backgroundText: textoBackground,
+      notes: listaNotas
     };
 
     this.characterService.saveCharacter(characterData);

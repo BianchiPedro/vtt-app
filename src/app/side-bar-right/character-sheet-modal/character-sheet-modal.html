@@ -33,24 +33,20 @@
     </div>
     
     <div class="flex-1 overflow-y-auto p-4 flex flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300">
-        @if (activeTab === 'main') {
+        <div [hidden]="activeTab !== 'main'" class="flex flex-row flex-wrap gap-4 items-start content-start justify-center w-full">
+            <app-character-basics></app-character-basics>
+            <app-character-backpack></app-character-backpack>
+            <app-character-relations></app-character-relations>
+            <app-character-status></app-character-status>
+            <app-character-theme></app-character-theme>
+            <app-character-theme></app-character-theme>
+            <app-character-theme></app-character-theme>
+        </div>
 
-        <app-character-basics></app-character-basics>
-        <app-character-backpack></app-character-backpack>
-        <app-character-relations></app-character-relations>
-        <app-character-status></app-character-status>
-        <app-character-theme></app-character-theme>
-        <app-character-theme></app-character-theme>
-        <app-character-theme></app-character-theme>
-
-        }
-
-        @if (activeTab === 'second') {
-            <div class="flex w-full text-white text-center">
+        <div [hidden]="activeTab !== 'second'" class="flex flex-row flex-wrap gap-4 items-start content-start w-full text-white text-center">
             <app-background></app-background>
             <app-notes></app-notes>
-            </div>
-        }
+        </div>
     </div>
 
     <button (click)="saveCharacter()"
