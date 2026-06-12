@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import { MatIcon } from "@angular/material/icon";
 import { CharacterBasics } from './main-sheet/character-basics/character-basics';
@@ -23,11 +23,15 @@ export class CharacterSheetModal {
   @ViewChild(CharacterBasics) basicsComponent!: CharacterBasics;
   @ViewChild(CharacterBackpack) backpackComponent!: CharacterBackpack;
   @ViewChild(CharacterRelations) relationsComponent!: CharacterRelations;
+  @ViewChild(CharacterStatus) statusComponent!: CharacterStatus;
+  @ViewChildren (CharacterTheme) themeComponents!: QueryList<CharacterTheme>;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
     const pacoteBackpack = this.backpackComponent.exportBackpackData();
     const pacoteRelations = this.relationsComponent.exportRelationsData();
+    const pacoteStatus = this.statusComponent.exportStatusData();
+    const pacoteThemes = this.themeComponents.map(theme => theme.exportThemeData());
 
     const characterData = {
       id: Date.now(),
@@ -38,6 +42,10 @@ export class CharacterSheetModal {
       item: pacoteBackpack.dados,
 
       relations: pacoteRelations.dados,
+
+      status: pacoteStatus.dados,
+
+      themes: pacoteThemes
     };
 
     this.characterService.saveCharacter(characterData);

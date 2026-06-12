@@ -11,22 +11,22 @@
                 <p class="bg-green-900 py-1 font-bold">MENTE</p>
                 <p class="bg-green-900 py-1 font-bold">Nív.</p>
             </div>
-            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index) {
+            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
                     <div class="h-5 flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white' ">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="statusData.mente.niveis[i].valor" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="h-full flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white'">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                        <input type="number"  [(ngModel)]="statusData.mente.niveis[i].mod"  class="w-full h-full text-center outline-none text-sm font-bold">
                     </div>
                 </div>
             }
 
             <div class="flex flex-row gap-[1px] bg-black h-10 border-t-[2px] border-black">
                 <div class="bg-white flex-1 h-full flex items-center">
-                    <input type="number" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
+                    <input type="number" [(ngModel)]="statusData.mente.base" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
                 </div>
                 <div class="bg-green-900 flex-1 h-full flex items-center">
                     <p class="w-full h-full text-center outline-none text-xl text-black font-bold bg-transparent">10</p>
@@ -39,21 +39,21 @@
                 <p class="bg-red-900 py-1 font-bold">CORPO</p>
                 <p class="bg-red-900 py-1 font-bold">Nív.</p>
             </div>
-            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index) {
+            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
                     <div class="h-5 flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white' ">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="statusData.corpo.niveis[i].valor" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="h-full flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white'">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                        <input type="number" [(ngModel)]="statusData.corpo.niveis[i].mod" class="w-full h-full text-center outline-none text-sm font-bold">
                     </div>
                 </div>
             }
             <div class="flex flex-row gap-[1px] bg-black h-10 border-t-[2px] border-black">
                 <div class="bg-white flex-1 h-full flex items-center">
-                    <input type="number" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
+                    <input type="number" [(ngModel)]="statusData.corpo.base" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
                 </div>
                 <div class="bg-red-900 flex-1 h-full flex items-center">
                     <p class="w-full h-full text-center outline-none text-xl text-black font-bold bg-transparent">10</p>
@@ -65,21 +65,21 @@
                 <p class="bg-blue-900 py-1 font-bold">ESPÍRITO</p>
                 <p class="bg-blue-900 py-1 font-bold">Nív.</p>
             </div>
-            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index) {
+            @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2rem] gap-[1px] bg-black h-5 text-black">
                     <div class="h-5 flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white' ">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="statusData.espirito.niveis[i].valor" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="h-full flex items-center"
                         [class]="$index % 2 ? 'bg-orange-100' : 'bg-white'">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold">
+                        <input type="number" [(ngModel)]="statusData.espirito.niveis[i].mod" class="w-full h-full text-center outline-none text-sm font-bold">
                     </div>
                 </div>
             }
             <div class="flex flex-row gap-[1px] bg-black h-10 border-t-[2px] border-black">
                 <div class="bg-white flex-1 h-full flex items-center">
-                    <input type="number" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
+                    <input type="number" [(ngModel)]="statusData.espirito.base" placeholder="0" class="w-full h-full text-center outline-none text-2xl text-black font-bold">
                 </div>
                 <div class="bg-blue-900 flex-1 h-full flex items-center">
                     <p class="w-full h-full text-center outline-none text-xl text-black font-bold bg-transparent">10</p>

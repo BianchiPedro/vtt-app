@@ -2,7 +2,7 @@
     
     <div class="flex flex-col bg-yellow-900 gap-[2px] p-2">
         <h1 class="text-white text-base tracking-widest font-bold cursor-grab active:cursor-grabbing" cdkDragHandle>Tema de Personagem</h1>
-        <input class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold rounded-md">
+        <input [(ngModel)]="themeData.nomeTema" class="w-full h-8 px-2 outline-none bg-white text-center text-black text-lg font-bold rounded-md">
     </div>
 
     <div class="grid grid-cols-2 gap-[1px] bg-black text-white">
@@ -16,11 +16,10 @@
             @for (linha of [0, 1, 2, 3, 4, 5]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black h-5 text-black">
                     <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="themeData.aspectos[i].nome" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" min="1" max="6" [(ngModel)]="modValues[i]"
-                               class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" min="1" max="6" [(ngModel)]="themeData.aspectos[i].mod" class="...">
                     </div>
                 </div>
             }
@@ -42,8 +41,8 @@
                     
                     <div class="bg-white h-full flex items-center px-1 font-sans">
                         <mat-select multiple 
-                                    [(ngModel)]="habilidadesSelecionadas[i]"
-                                    [disabled]="!modValues[i] || modValues[i] < 3"
+                                    [(ngModel)]="themeData.habilidadesClasse[i].habilidades"
+                                    [disabled]="!themeData.aspectos[i].mod || themeData.aspectos[i].mod < 3"
                                     class="w-full text-center text-[11px] outline-none border-none cursor-pointer"
                                     placeholder="Habilidades..."
                                     style="border: none !important; box-shadow: none !important;">
@@ -63,13 +62,13 @@
                 <p class="bg-yellow-900 py-1 font-bold">Mod</p>
             </div>
             
-            @for (linha of [0, 1, 2, 3]; track $index) {
+            @for (linha of [0, 1, 2, 3]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2.5rem] gap-[1px] bg-black h-5 text-black">
                     <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="themeData.defeitos[i].nome" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" [(ngModel)]="themeData.defeitos[i].mod" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                     </div>
                 </div>
             }
@@ -82,16 +81,16 @@
                 <p class="bg-yellow-900 py-1 font-bold">SN</p>
             </div>
             
-            @for (linha of [0, 1, 2, 3]; track $index) {
+            @for (linha of [0, 1, 2, 3]; track $index; let i = $index) {
                 <div class="grid grid-cols-[1fr_2.5rem_2.5rem] gap-[1px] bg-black h-5 text-black">
                     <div class="bg-white h-full flex items-center">
-                        <input type="text" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="themeData.treinos[i].nome" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" [(ngModel)]="themeData.treinos[i].sa" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                     </div>
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" [(ngModel)]="themeData.treinos[i].sn" class="w-full h-full text-center outline-none text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                     </div>
                 </div>
             }
@@ -100,7 +99,7 @@
 
     <div class="grid grid-cols-[1fr] gap-[1px] text-white border-t-[2px] border-black">
         <p class="py-1 font-bold bg-yellow-900 tracking-widest">OBJETIVO</p>
-        <textarea class="bg-white text-black w-full h-12 p-2 resize-none outline-none text-xs" placeholder="Descreva seu objetivo para esse Tema..."></textarea>
+        <textarea [(ngModel)]="themeData.objetivo" class="bg-white text-black w-full h-12 p-2 resize-none outline-none text-xs" placeholder="Descreva seu objetivo para esse Tema..."></textarea>
     </div>
 
     <div class="grid grid-cols-2 gap-[2px] bg-black text-white border-t-[1px] border-black">
@@ -108,7 +107,7 @@
             <p class="py-1 font-bold bg-yellow-900">Abandono</p>
             <div class="grid grid-cols-6 gap-[4px] bg-yellow-900 p-2 flex-1 items-center justify-items-center">
                 @for (item of [0, 1, 2, 3, 4, 5]; track $index) {
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
+                    <input type="checkbox" [(ngModel)]="themeData.abandono[$index]" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
                 }
             </div>
         </div>
@@ -116,7 +115,7 @@
             <p class="py-1 font-bold bg-yellow-900">Avanço</p>
             <div class="grid grid-cols-6 gap-[4px] bg-yellow-900 p-2 flex-1 items-center justify-items-center">
                 @for (item of [0, 1, 2, 3, 4, 5]; track $index) {
-                    <input type="checkbox" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
+                    <input type="checkbox" [(ngModel)]="themeData.avanco[$index]" class="w-4 h-4 rounded cursor-pointer accent-yellow-700 bg-white">
                 }
             </div>
         </div>
