@@ -11,6 +11,14 @@
 .custom-vtt-dialog .mat-mdc-dialog-surface {
   resize: both !important; /* Permite esticar tanto na horizontal quanto na vertical */
   overflow: auto !important; /* Garante que o navegador mostre a alça de resize no canto inferior direito */
-  min-width: 600px; /* Impede o usuário de esmagar a ficha menos que isso */
   min-height: 400px;
+}
+
+.custom-vtt-dialog .mdc-dialog__surface,
+.custom-vtt-dialog .mat-mdc-dialog-surface,
+.custom-vtt-dialog .mat-dialog-container {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
 }

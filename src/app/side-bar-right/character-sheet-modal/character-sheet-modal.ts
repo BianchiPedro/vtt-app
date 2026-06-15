@@ -19,18 +19,18 @@ import { Spells } from "./second-sheet/spells/spells";
 })
 export class CharacterSheetModal implements AfterViewInit {
 
-  ngAfterViewInit() {
+ngAfterViewInit() {
     if (this.data) {
       setTimeout(() => {
         this.basicsComponent.loadData(this.data.name, this.data.basics);
         this.backpackComponent.backpackData = this.data.item;
         this.relationsComponent.relationsData = this.data.relations;
         this.statusComponent.statusData = this.data.status;
+        
         this.themeComponents.forEach((ThemeComp, index) => {
           if(this.data.themes[index]) {
             ThemeComp.themeData = this.data.themes[index];
           }
-        this.cdr.detectChanges();
         });
 
         if (this.backgroundComponent && this.data.backgroundText) {
@@ -39,8 +39,13 @@ export class CharacterSheetModal implements AfterViewInit {
         if (this.noteComponent && this.data.notes) {
           this.noteComponent.pages = this.data.notes;
         }
-        this.spellComponent.spellsData = this.data.school, this.data.form, this.data.niv;
-      })
+        
+        if (this.spellComponent && this.data.spells) {
+          this.spellComponent.spellsData = this.data.spells;
+        }
+
+        this.cdr.detectChanges();
+      });
     }
   }
 
@@ -58,6 +63,7 @@ export class CharacterSheetModal implements AfterViewInit {
   @ViewChild (Background) backgroundComponent!: Background;
   @ViewChild (Notes) noteComponent!: Notes;
   @ViewChild (Spells) spellComponent!: Spells;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
@@ -87,6 +93,24 @@ export class CharacterSheetModal implements AfterViewInit {
     this.data = characterData;
 
     console.log('Dados extraídos', characterData)
+  }
+
+  isMinimized = false;
+
+  toggleMinimized() {
+    this.isMinimized = !this.isMinimized;
+
+    if(this.isMinimized) {
+      this.dialogRef.updateSize('auto', '');
+    } else {
+      this.dialogRef.updateSize('80vw', '95vh');
+    }
+
+    setTimeout(() => {
+        if (this.dragInstance) {
+          this.dragInstance.reset();
+        }
+      });
   }
 
   closeModal() {
