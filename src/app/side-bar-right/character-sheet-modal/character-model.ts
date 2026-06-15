@@ -19,6 +19,12 @@ export interface BackpackItem {
   qtd: number | string;
 }
 
+export interface SpellBook {
+  school: string;
+  form: string;
+  niv: number;
+}
+
 export interface CharacterRelations {
   nome: string;
   laco: string;

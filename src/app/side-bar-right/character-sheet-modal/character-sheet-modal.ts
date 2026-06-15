@@ -10,10 +10,11 @@ import { Background } from "./second-sheet/background/background";
 import { Notes } from "./second-sheet/notes/notes";
 import { CharacterService } from './character-sheet.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Spells } from "./second-sheet/spells/spells";
 
 @Component({
   selector: 'app-character-sheet-modal',
-  imports: [CdkDrag, MatIcon, CharacterBasics, CdkDragHandle, CharacterRelations, CharacterBackpack, CharacterTheme, CharacterStatus, Background, Notes],
+  imports: [CdkDrag, MatIcon, CharacterBasics, CdkDragHandle, CharacterRelations, CharacterBackpack, CharacterTheme, CharacterStatus, Background, Notes, Spells],
   templateUrl: './character-sheet-modal.html',
 })
 export class CharacterSheetModal implements AfterViewInit {
@@ -38,6 +39,7 @@ export class CharacterSheetModal implements AfterViewInit {
         if (this.noteComponent && this.data.notes) {
           this.noteComponent.pages = this.data.notes;
         }
+        this.spellComponent.spellsData = this.data.school, this.data.form, this.data.niv;
       })
     }
   }
@@ -55,6 +57,7 @@ export class CharacterSheetModal implements AfterViewInit {
   @ViewChildren (CharacterTheme) themeComponents!: QueryList<CharacterTheme>;
   @ViewChild (Background) backgroundComponent!: Background;
   @ViewChild (Notes) noteComponent!: Notes;
+  @ViewChild (Spells) spellComponent!: Spells;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
@@ -64,6 +67,7 @@ export class CharacterSheetModal implements AfterViewInit {
     const pacoteThemes = this.themeComponents.map(theme => theme.exportThemeData());
     const textoBackground = this.backgroundComponent ? this.backgroundComponent.exportBackgroundData() : '';
     const listaNotas = this.noteComponent ? this.noteComponent.exportNoteData() : [];
+    const listaSpells = this.spellComponent ? this.spellComponent.exportSpellsData() : [];
 
     const characterData = {
       id: this.data ? this.data.id : Date.now(),
@@ -75,7 +79,8 @@ export class CharacterSheetModal implements AfterViewInit {
       status: pacoteStatus.dados,
       themes: pacoteThemes,
       backgroundText: textoBackground,
-      notes: listaNotas
+      notes: listaNotas,
+      spells: listaSpells
     };
 
     this.characterService.saveCharacter(characterData);
