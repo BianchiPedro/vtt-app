@@ -13,8 +13,8 @@ export class Background {
 
   backgroundText = '';
 
+  
   exportBackgroundData() {
-    return this.backgroundText;
+    return this.backgroundText
   }
-
 }

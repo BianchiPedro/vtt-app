@@ -103,5 +103,6 @@ export interface Character {
   themes: ThemeData[];   // Array com os multiplos cartões de Tema da Ficha
   
   backgroundText: string; // O que for escrito no componente de Background
+  characterImage: string | null;
   notes: NotePage[];      // O caderno de abas
 }

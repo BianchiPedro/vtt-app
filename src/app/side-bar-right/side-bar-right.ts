@@ -153,7 +153,7 @@ ngOnInit() {
     if (type === 'Personagem') {
       this.dialog.open(CharacterSheetModal, {
         hasBackdrop: false,
-        width: '80vw',        // Ocupa 90% da largura da tela do mestre inicialmente
+        width: '1700px',        // Ocupa 90% da largura da tela do mestre inicialmente
         height: '95vh',       // Ocupa 85% da altura da tela inicialmente
         maxWidth: '95vw',     // Permite expandir quase até a borda da tela
         maxHeight: '95vh',    // Permite expandir quase até o topo/fundo
@@ -169,7 +169,7 @@ ngOnInit() {
   openCharacter(character: any) {
     this.dialog.open(CharacterSheetModal, {
       hasBackdrop: false,
-      width: '80vw',
+      width: '1700px',
       height: '95vh',
       maxWidth: '95vw',
       maxHeight: '95vh',

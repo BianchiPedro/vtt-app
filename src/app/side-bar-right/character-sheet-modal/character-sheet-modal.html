@@ -1,4 +1,4 @@
-<div class="bg-zinc-300 w-full shadow-2xl rounded-sm border-[12px] border-neutral-900 overflow-hidden flex flex-col" 
+<div class="bg-zinc-300 w-full shadow-2xl rounded-sm border-[12px] border-neutral-900 overflow-hidden flex flex-col resize" 
     cdkDrag cdkDragRootElement=".cdk-overlay-pane" 
     [class.h-full]="!isMinimized">
     
@@ -36,10 +36,11 @@
         </div>
     </div>
     
-    <div class="flex-1 overflow-y-auto p-4 flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300" 
+    <div class="flex-1 overflow-y-auto p-1 flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300" 
          [style.display]="isMinimized ? 'none' : 'flex'">
         
-        <div [style.display]="activeTab === 'main' ? 'flex' : 'none'" class="flex-row flex-wrap gap-4 items-start content-start justify-center w-full">
+        <div [style.display]="activeTab === 'main' ? 'flex' : 'none'" class="flex-row flex-wrap gap-1 items-start content-start w-full justify-center">
+            <app-character-image></app-character-image>
             <app-character-basics></app-character-basics>
             <app-character-backpack></app-character-backpack>
             <app-character-relations></app-character-relations>
@@ -47,10 +48,10 @@
             <app-character-theme></app-character-theme>
             <app-character-theme></app-character-theme>
             <app-character-theme></app-character-theme>
+            <app-spells></app-spells>
         </div>
 
-        <div [style.display]="activeTab === 'second' ? 'flex' : 'none'" class="flex-row flex-wrap gap-4 items-start content-start w-full text-white text-center">
-            <app-spells></app-spells>
+        <div [style.display]="activeTab === 'second' ? 'flex' : 'none'" class="flex-row flex-wrap gap-2 items-start content-start w-full text-white text-center justify-center">
             <app-background></app-background>
             <app-notes></app-notes>
         </div>

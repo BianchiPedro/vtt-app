@@ -1,0 +1,27 @@
+<div class="flex flex-col w-[190px] h-[190px] text-center font-serif bg-black gap-[2px] border-[3px] border-black rounded-xl text-xs my-2 mx-2 shadow-stone-900 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-shadow duration-300 ease-in-out overflow-hidden" cdkDrag>
+    
+    <div class="flex flex-col bg-zinc-900 gap-[2px]">
+        <h1 class="text-white py-1 tracking-widest text-xs font-bold cursor-grab active:cursor-grabbing uppercase" cdkDragHandle>
+            Retrato
+        </h1>
+    </div>
+
+    <div class="flex-1 bg-zinc-200 flex flex-col items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors relative group overflow-hidden shadow-inner"
+         (click)="fileInput.click()">
+        
+        @if (characterImage) {
+            <img [src]="characterImage" class="w-full h-full object-cover">
+            
+            <div class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white transition-all">
+                <mat-icon class="text-2xl">edit</mat-icon>
+            </div>
+        } @else {
+            <div class="flex flex-col items-center justify-center gap-2 select-none text-zinc-500">
+                <mat-icon class="text-4xl">add_a_photo</mat-icon>
+                <span class="text-xs font-sans font-bold uppercase tracking-wider">Enviar Foto</span>
+            </div>
+        }
+
+        <input type="file" #fileInput class="hidden" accept="image/*" (change)="onFileSelected($event)">
+    </div>
+</div>

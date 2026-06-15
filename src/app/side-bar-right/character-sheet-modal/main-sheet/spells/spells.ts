@@ -15,8 +15,7 @@ export class Spells {
   spellsData: SpellBook[] = Array.from({ length: 62}, () => ({school: '', form: '', niv: 0}));
 
   exportSpellsData() {
-    return {
-      data: this.spellsData
-    }
+    return this.spellsData;
+    
   }
 }

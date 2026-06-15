@@ -18,19 +18,19 @@
                 <p class="bg-sky-900 py-1 font-bold">Niv.</p>
             </div>
         
-            @for (linha of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]; track $index; let l = $index) {
+            @for (linha of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]; track $index; let l = $index) {
                 <div class="grid grid-cols-5 gap-[1px] bg-black h-5 text-black">
                     
                     <div class="bg-white col-span-2 h-full flex items-center">
-                        <input type="text" [(ngModel)]="spellsData[(c * 31) + l].school" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="spellsData[(c * 20) + l].school" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
 
                     <div class="bg-white col-span-2  h-full flex items-center">
-                        <input type="text" [(ngModel)]="spellsData[(c * 31) + l].form" class="w-full h-full px-2 outline-none text-xs text-center">
+                        <input type="text" [(ngModel)]="spellsData[(c * 20) + l].form" class="w-full h-full px-2 outline-none text-xs text-center">
                     </div>
                     
                     <div class="bg-white h-full flex items-center">
-                        <input type="number" [(ngModel)]="spellsData[(c * 31) + l].niv" class="w-full h-full text-center outline-none text-sm font-bold">
+                        <input type="number" [(ngModel)]="spellsData[(c * 20) + l].niv" class="w-full h-full text-center outline-none text-sm font-bold">
                     </div>
                 </div>
             }

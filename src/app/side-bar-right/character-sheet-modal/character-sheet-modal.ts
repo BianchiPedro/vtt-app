@@ -10,11 +10,12 @@ import { Background } from "./second-sheet/background/background";
 import { Notes } from "./second-sheet/notes/notes";
 import { CharacterService } from './character-sheet.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Spells } from "./second-sheet/spells/spells";
+import { Spells } from "./main-sheet/spells/spells";
+import { CharacterImage } from './main-sheet/character-image/character-image';
 
 @Component({
   selector: 'app-character-sheet-modal',
-  imports: [CdkDrag, MatIcon, CharacterBasics, CdkDragHandle, CharacterRelations, CharacterBackpack, CharacterTheme, CharacterStatus, Background, Notes, Spells],
+  imports: [CdkDrag, MatIcon, CharacterBasics, CdkDragHandle, CharacterRelations, CharacterBackpack, CharacterTheme, CharacterStatus, Background, Notes, Spells, CharacterImage],
   templateUrl: './character-sheet-modal.html',
 })
 export class CharacterSheetModal implements AfterViewInit {
@@ -36,12 +37,17 @@ ngAfterViewInit() {
         if (this.backgroundComponent && this.data.backgroundText) {
           this.backgroundComponent.backgroundText = this.data.backgroundText;
         }
+
         if (this.noteComponent && this.data.notes) {
           this.noteComponent.pages = this.data.notes;
         }
         
-        if (this.spellComponent && this.data.spells) {
+        if (this.spellComponent && this.data.spells && this.data.spells.length > 0) {
           this.spellComponent.spellsData = this.data.spells;
+        }
+
+        if (this.imageComponent && this.data.characterImage) {
+          this.imageComponent.characterImage = this.data.characterImage;
         }
 
         this.cdr.detectChanges();
@@ -64,6 +70,7 @@ ngAfterViewInit() {
   @ViewChild (Notes) noteComponent!: Notes;
   @ViewChild (Spells) spellComponent!: Spells;
   @ViewChild(CdkDrag) dragInstance!: CdkDrag;
+  @ViewChild(CharacterImage) imageComponent!: CharacterImage;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
@@ -74,6 +81,7 @@ ngAfterViewInit() {
     const textoBackground = this.backgroundComponent ? this.backgroundComponent.exportBackgroundData() : '';
     const listaNotas = this.noteComponent ? this.noteComponent.exportNoteData() : [];
     const listaSpells = this.spellComponent ? this.spellComponent.exportSpellsData() : [];
+    const imagemPersonagem = this.imageComponent ? this.imageComponent.exportCharacterImage() : [];
 
     const characterData = {
       id: this.data ? this.data.id : Date.now(),
@@ -86,7 +94,8 @@ ngAfterViewInit() {
       themes: pacoteThemes,
       backgroundText: textoBackground,
       notes: listaNotas,
-      spells: listaSpells
+      spells: listaSpells,
+      characterImage: imagemPersonagem
     };
 
     this.characterService.saveCharacter(characterData);
@@ -103,7 +112,7 @@ ngAfterViewInit() {
     if(this.isMinimized) {
       this.dialogRef.updateSize('auto', '');
     } else {
-      this.dialogRef.updateSize('80vw', '95vh');
+      this.dialogRef.updateSize('1700px', '95vh');
     }
 
     setTimeout(() => {
