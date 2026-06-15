@@ -19,8 +19,17 @@
         </div>
         
         <div class="flex flex-row items-center justify-center gap-3 font-bold text-lg" [class.mr-40]="!isMinimized">
-            <img src="assets/images.jpg" class="rounded-full w-8 h-8"/>
-            <p class="text-white">{{ data?.name || 'NOVO PERSONAGEM' }}</p>
+            
+            @if (imageComponent?.characterImage || data?.characterImage) {
+                <img [src]="imageComponent?.characterImage || data?.characterImage" class="rounded-full w-8 h-8 object-cover border-[1px] border-zinc-500 shadow-md"/>
+            } 
+            @else {
+                <div class="rounded-full w-8 h-8 bg-zinc-800 border-[1px] border-zinc-500 flex items-center justify-center shadow-md">
+                    <mat-icon class="text-[18px] text-zinc-400">person</mat-icon>
+                </div>
+            }
+            
+            <p class="text-white uppercase">{{ data?.name || 'NOVO PERSONAGEM' }}</p>
         </div>
         
         <div class="flex flex-row ml-4">
@@ -36,7 +45,7 @@
         </div>
     </div>
     
-    <div class="flex-1 overflow-y-auto p-1 flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300" 
+    <div class="flex flex-col flex-1 overflow-y-auto p-1 flex-row flex-wrap gap-4 items-start content-start justify-center relative bg-zinc-300" 
          [style.display]="isMinimized ? 'none' : 'flex'">
         
         <div [style.display]="activeTab === 'main' ? 'flex' : 'none'" class="flex-row flex-wrap gap-1 items-start content-start w-full justify-center">

@@ -70,7 +70,7 @@ ngAfterViewInit() {
   @ViewChild (Notes) noteComponent!: Notes;
   @ViewChild (Spells) spellComponent!: Spells;
   @ViewChild(CdkDrag) dragInstance!: CdkDrag;
-  @ViewChild(CharacterImage) imageComponent!: CharacterImage;
+  @ViewChild(CharacterImage) imageComponent?: CharacterImage;
 
   saveCharacter(){
     const pacoteBasics = this.basicsComponent.exportBasicsData();
@@ -81,7 +81,7 @@ ngAfterViewInit() {
     const textoBackground = this.backgroundComponent ? this.backgroundComponent.exportBackgroundData() : '';
     const listaNotas = this.noteComponent ? this.noteComponent.exportNoteData() : [];
     const listaSpells = this.spellComponent ? this.spellComponent.exportSpellsData() : [];
-    const imagemPersonagem = this.imageComponent ? this.imageComponent.exportCharacterImage() : [];
+    const imagemPersonagem = this.imageComponent ? this.imageComponent.exportCharacterImage() : null;
 
     const characterData = {
       id: this.data ? this.data.id : Date.now(),
