@@ -20,7 +20,7 @@ import { CharacterImage } from './main-sheet/character-image/character-image';
 })
 export class CharacterSheetModal implements AfterViewInit {
 
-ngAfterViewInit() {
+  ngAfterViewInit() {
     if (this.data) {
       setTimeout(() => {
         this.basicsComponent.loadData(this.data.name, this.data.basics);
@@ -48,6 +48,8 @@ ngAfterViewInit() {
 
         if (this.imageComponent && this.data.characterImage) {
           this.imageComponent.characterImage = this.data.characterImage;
+          // Passar o ID do personagem para o componente de imagem
+          this.imageComponent.characterId = this.data.id;
         }
 
         this.cdr.detectChanges();
@@ -83,8 +85,9 @@ ngAfterViewInit() {
     const listaSpells = this.spellComponent ? this.spellComponent.exportSpellsData() : [];
     const imagemPersonagem = this.imageComponent ? this.imageComponent.exportCharacterImage() : null;
 
+    const characterId = this.data ? this.data.id : Date.now();
     const characterData = {
-      id: this.data ? this.data.id : Date.now(),
+      id: characterId,
       name: pacoteBasics.nome || 'Fulano',
       type: 'Persoangem',
       basics: pacoteBasics.dados,
@@ -99,6 +102,10 @@ ngAfterViewInit() {
     };
 
     this.characterService.saveCharacter(characterData);
+    // Se houver imagem, garantir que está sincronizada via serviço
+    if (imagemPersonagem) {
+      this.characterService.updateCharacterImage(characterId, imagemPersonagem);
+    }
     this.data = characterData;
 
     console.log('Dados extraídos', characterData)

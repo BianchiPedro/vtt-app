@@ -1,13 +1,16 @@
-import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener, inject, OnInit, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { CharacterService } from '../side-bar-right/character-sheet-modal/character-sheet.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map-area',
   imports: [MatIconModule, CommonModule],
   templateUrl: './map-area.html',
 })
-export class MapArea {
+export class MapArea implements OnInit, OnDestroy {
 
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
@@ -22,7 +25,8 @@ export class MapArea {
   draggingToken: any = null;
   dragOffsetX = 0; // Offset do clique dentro do token (em coords do mapa)
   dragOffsetY = 0;
-
+  private characterService = inject(CharacterService);
+  private destroy$ = new Subject<void>();
   onWheel(event: WheelEvent): void {
     event.preventDefault();
     const wrapper = this.mapContainer.nativeElement.parentElement;
@@ -109,6 +113,28 @@ export class MapArea {
       this.draggingToken = null;
       this.resizingToken = null; // <- adicione esta linha
     }
+  }
+
+  // ==========================================
+  // INICIALIZAÇÃO E LIFECYCLE
+  // ==========================================
+  ngOnInit() {
+    // Se inscrever em atualizações de imagem de personagem
+    this.characterService.characterImageUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ id, imageUrl }) => {
+        // Encontrar todos os tokens com este characterId e atualizar sua imagem
+        this.tokensNoMapa.forEach(token => {
+          if (token.characterId === id) {
+            token.image = imageUrl;
+          }
+        });
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // ==========================================

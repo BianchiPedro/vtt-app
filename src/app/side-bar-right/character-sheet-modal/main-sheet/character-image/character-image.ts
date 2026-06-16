@@ -1,8 +1,9 @@
 import { CdkDragHandle, CdkDrag } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { CharacterService } from '../../character-sheet.service';
 
 @Component({
   selector: 'app-character-image',
@@ -11,7 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class CharacterImage {
   
+  @Input() characterId: number | null = null;
+  
   characterImage: string | null = null;
+  private characterService = inject(CharacterService);
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -21,6 +25,10 @@ export class CharacterImage {
 
       reader.onload = (e: any) => {
         this.characterImage = e.target.result;
+        // Sincronizar imagem em tempo real com o serviço
+        if (this.characterId !== null && this.characterImage) {
+          this.characterService.updateCharacterImage(this.characterId, this.characterImage);
+        }
       };
 
       reader.readAsDataURL(file);
