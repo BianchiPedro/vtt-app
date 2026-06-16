@@ -114,8 +114,10 @@
                                     
                                     @for (item of folder.items; track item.id) {
                                         <div (click)="openCharacter(item)"
-                                             (contextmenu)="openContextMenu($event, item.id); $event.stopPropagation()"
-                                             class="flex flex-row items-center gap-2 cursor-pointer hover:text-sky-400 transition-colors py-1">
+                                            (contextmenu)="openContextMenu($event, item.id); $event.stopPropagation()"
+                                            draggable="true" 
+                                            (dragstart)="onDragStart($event, item)"
+                                            class="flex flex-row items-center gap-2 cursor-pointer hover:text-sky-400 transition-colors py-1">
                                             
                                             @if (item.characterImage) {
                                                 <img [src]="item.characterImage" class="w-6 h-6 rounded-full object-cover border border-zinc-600 shadow-sm flex-none">

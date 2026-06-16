@@ -1,57 +1,201 @@
-import { Component } from '@angular/core';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map-area',
-  imports: [DragDropModule],
+  imports: [MatIconModule, CommonModule],
   templateUrl: './map-area.html',
 })
 export class MapArea {
 
+  @ViewChild('mapContainer') mapContainer!: ElementRef;
+
   zoomLevel = 1;
-
-  onWheel(event: WheelEvent) : void {
-    
-    if (event.deltaY > 0) {
-      this.zoomLevel = Math.max(0.2, this.zoomLevel - 0.1); 
-      
-    } else if (event.deltaY < 0) {
-      this.zoomLevel = Math.min(3, this.zoomLevel + 0.1); 
-    }
-    
-    console.log('Nível do Zoom atual:', this.zoomLevel);
-  }
-
-  // --- Variáveis da Câmera ---
   panX = 0;
   panY = 0;
   isPanning = false;
   startX = 0;
   startY = 0;
 
-  // --- Motor de Arraste (Pan) ---
+  // Estado do drag de token
+  draggingToken: any = null;
+  dragOffsetX = 0; // Offset do clique dentro do token (em coords do mapa)
+  dragOffsetY = 0;
+
+  onWheel(event: WheelEvent): void {
+    event.preventDefault();
+    const wrapper = this.mapContainer.nativeElement.parentElement;
+    const rect = wrapper.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const oldZoom = this.zoomLevel;
+
+    if (event.deltaY > 0) {
+      this.zoomLevel = Math.max(0.2, this.zoomLevel - 0.1);
+    } else {
+      this.zoomLevel = Math.min(3, this.zoomLevel + 0.1);
+    }
+
+    const zoomFactor = this.zoomLevel / oldZoom;
+    this.panX = mouseX - (mouseX - this.panX) * zoomFactor;
+    this.panY = mouseY - (mouseY - this.panY) * zoomFactor;
+  }
+
   startPan(event: MouseEvent): void {
-    // Só permite arrastar se for o botão do meio (1)
     if (event.button === 1) {
-      event.preventDefault(); // Impede o navegador de mostrar aquele ícone estranho de scroll
+      event.preventDefault();
       this.isPanning = true;
-      // Calcula a diferença entre onde o mouse está e onde o mapa já estava
       this.startX = event.clientX - this.panX;
       this.startY = event.clientY - this.panY;
     }
   }
 
-  pan(event: MouseEvent): void {
-    // Só atualiza a posição se estiver segurando o botão do meio
+  @HostListener('window:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    // Pan do mapa
     if (this.isPanning) {
       this.panX = event.clientX - this.startX;
       this.panY = event.clientY - this.startY;
     }
-  }
 
-  endPan(event: MouseEvent): void {
-    if (event.button === 1) {
-      this.isPanning = false;
+    // Drag de token
+    if (this.draggingToken) {
+      const wrapper = this.mapContainer.nativeElement.parentElement;
+      const rect = wrapper.getBoundingClientRect();
+
+      // Converte posição do mouse para coordenadas do mapa
+      const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
+      const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+
+      // Subtrai o offset para o token não "pular" para o centro
+      this.draggingToken.position.x = mapX - this.dragOffsetX;
+      this.draggingToken.position.y = mapY - this.dragOffsetY;
+    }
+    // Resize do token
+    if (this.resizingToken) {
+      const wrapper = this.mapContainer.nativeElement.parentElement;
+      const rect = wrapper.getBoundingClientRect();
+
+      const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
+      const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+
+      const centerX = this.resizingToken.position.x + this.resizingToken.size / 2;
+      const centerY = this.resizingToken.position.y + this.resizingToken.size / 2;
+
+      const dx = mapX - centerX;
+      const dy = mapY - centerY;
+      const currentDist = Math.sqrt(dx * dx + dy * dy);
+
+      // Escala proporcional: novo tamanho = tamanho inicial * (distância atual / distância inicial)
+      const newSize = Math.max(30, Math.min(200, 
+        this.resizeStartSize * (currentDist / this.resizeStartDist)
+      ));
+
+      // Reposiciona para manter o centro fixo
+      this.resizingToken.position.x = this.resizingToken.position.x 
+        + (this.resizingToken.size - newSize) / 2;
+      this.resizingToken.position.y = this.resizingToken.position.y 
+        + (this.resizingToken.size - newSize) / 2;
+      
+      this.resizingToken.size = newSize;
     }
   }
+
+  @HostListener('window:mouseup', ['$event'])
+  onMouseUp(event: MouseEvent): void {
+    if (event.button === 1) this.isPanning = false;
+    if (event.button === 0) {
+      this.draggingToken = null;
+      this.resizingToken = null; // <- adicione esta linha
+    }
+  }
+
+  // ==========================================
+  // DROP DA SIDEBAR
+  // ==========================================
+  tokensNoMapa: any[] = [];
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const dataString = event.dataTransfer?.getData('application/JSON');
+    if (!dataString) return;
+
+    const character = JSON.parse(dataString);
+    const wrapper = this.mapContainer.nativeElement.parentElement;
+    const rect = wrapper.getBoundingClientRect();
+
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Converte para coordenadas do mapa, centralizando o token (60px / 2 = 30)
+    const coordX = (mouseX - this.panX) / this.zoomLevel - 30;
+    const coordY = (mouseY - this.panY) / this.zoomLevel - 30;
+
+    this.tokensNoMapa.push({
+      tokenId: Date.now() + Math.random(),
+      characterId: character.id,
+      name: character.name,
+      image: character.characterImage,
+      position: { x: coordX, y: coordY },
+      size: 60  // <- tamanho inicial
+    });
+  }
+
+  // ==========================================
+  // DRAG DE TOKEN NO MAPA
+  // ==========================================
+  startTokenDrag(event: MouseEvent, token: any): void {
+    // Só arrasta com botão esquerdo
+    if (event.button !== 0) return;
+    event.stopPropagation(); // Não inicia pan do mapa
+
+    const wrapper = this.mapContainer.nativeElement.parentElement;
+    const rect = wrapper.getBoundingClientRect();
+
+    // Onde o mouse está no espaço do mapa
+    const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
+    const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+
+    // Offset = diferença entre onde o mouse clicou e a origem do token
+    // Isso evita que o token "salte" para ter seu canto no cursor
+    this.dragOffsetX = mapX - token.position.x;
+    this.dragOffsetY = mapY - token.position.y;
+
+    this.draggingToken = token;
+  }
+
+  // Estado do resize de token
+resizingToken: any = null;
+resizeStartDist = 0;  // distância inicial do handle ao centro (em coords do mapa)
+resizeStartSize = 60; // tamanho inicial do token em px
+
+startTokenResize(event: MouseEvent, token: any): void {
+  if (event.button !== 0) return;
+  event.stopPropagation(); // não inicia drag nem pan
+
+  const wrapper = this.mapContainer.nativeElement.parentElement;
+  const rect = wrapper.getBoundingClientRect();
+
+  // Centro do token em coords do mapa
+  const centerX = token.position.x + token.size / 2;
+  const centerY = token.position.y + token.size / 2;
+
+  // Posição do mouse em coords do mapa
+  const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
+  const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+
+  // Distância do mouse ao centro no momento do clique
+  const dx = mapX - centerX;
+  const dy = mapY - centerY;
+  this.resizeStartDist = Math.sqrt(dx * dx + dy * dy);
+  this.resizeStartSize = token.size;
+
+  this.resizingToken = token;
+}
 }

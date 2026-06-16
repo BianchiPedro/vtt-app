@@ -216,4 +216,12 @@ ngOnInit() {
     this.showContextMenu = false;
   }
 
+  onDragStart(event: DragEvent, character: any) {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('application/JSON', JSON.stringify(character));
+
+      event.dataTransfer.effectAllowed = 'copy';
+    }
+  }
+
 }
