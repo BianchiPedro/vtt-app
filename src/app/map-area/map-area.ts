@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { CharacterService } from '../side-bar-right/character-sheet-modal/character-sheet.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { CharacterSheetModal } from '../side-bar-right/character-sheet-modal/character-sheet-modal';
 
 @Component({
   selector: 'app-map-area',
@@ -11,6 +13,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './map-area.html',
 })
 export class MapArea implements OnInit, OnDestroy {
+
+  dialog = inject(MatDialog)
 
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
@@ -47,6 +51,9 @@ export class MapArea implements OnInit, OnDestroy {
   }
 
   startPan(event: MouseEvent): void {
+
+    this.selectedToken = null;
+
     if (event.button === 1) {
       event.preventDefault();
       this.isPanning = true;
@@ -115,6 +122,25 @@ export class MapArea implements OnInit, OnDestroy {
     }
   }
 
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedToken) {
+      
+      // CADEADO DE SEGURANÇA: Verifica onde o cursor do mouse (foco) está.
+      // Se estiver piscando dentro de um input ou textarea (como o chat ou ficha), aborta a deleção!
+      const activeTag = document.activeElement?.tagName.toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea') {
+        return; 
+      }
+
+      // Filtra a lista, removendo o token que tem o mesmo ID do token selecionado
+      this.tokensNoMapa = this.tokensNoMapa.filter(t => t.tokenId !== this.selectedToken.tokenId);
+      
+      // Limpa a memória de seleção
+      this.selectedToken = null;
+    }
+  }
+
   // ==========================================
   // INICIALIZAÇÃO E LIFECYCLE
   // ==========================================
@@ -177,6 +203,7 @@ export class MapArea implements OnInit, OnDestroy {
   // DRAG DE TOKEN NO MAPA
   // ==========================================
   startTokenDrag(event: MouseEvent, token: any): void {
+
     // Só arrasta com botão esquerdo
     if (event.button !== 0) return;
     event.stopPropagation(); // Não inicia pan do mapa
@@ -194,6 +221,8 @@ export class MapArea implements OnInit, OnDestroy {
     this.dragOffsetY = mapY - token.position.y;
 
     this.draggingToken = token;
+    
+    this.selectedToken = token;
   }
 
   // Estado do resize de token
@@ -203,25 +232,47 @@ resizeStartSize = 60; // tamanho inicial do token em px
 
 startTokenResize(event: MouseEvent, token: any): void {
   if (event.button !== 0) return;
-  event.stopPropagation(); // não inicia drag nem pan
+    event.stopPropagation(); // não inicia drag nem pan
 
-  const wrapper = this.mapContainer.nativeElement.parentElement;
-  const rect = wrapper.getBoundingClientRect();
+    const wrapper = this.mapContainer.nativeElement.parentElement;
+    const rect = wrapper.getBoundingClientRect();
 
-  // Centro do token em coords do mapa
-  const centerX = token.position.x + token.size / 2;
-  const centerY = token.position.y + token.size / 2;
+    // Centro do token em coords do mapa
+    const centerX = token.position.x + token.size / 2;
+    const centerY = token.position.y + token.size / 2;
 
-  // Posição do mouse em coords do mapa
-  const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
-  const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+    // Posição do mouse em coords do mapa
+    const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
+    const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
 
-  // Distância do mouse ao centro no momento do clique
-  const dx = mapX - centerX;
-  const dy = mapY - centerY;
-  this.resizeStartDist = Math.sqrt(dx * dx + dy * dy);
-  this.resizeStartSize = token.size;
+    // Distância do mouse ao centro no momento do clique
+    const dx = mapX - centerX;
+    const dy = mapY - centerY;
+    this.resizeStartDist = Math.sqrt(dx * dx + dy * dy);
+    this.resizeStartSize = token.size;
 
-  this.resizingToken = token;
+    this.resizingToken = token;
+    
+    this.selectedToken = token;
 }
+
+  openTokenSheet(token: any) {
+    const fullSheet = this.characterService.getCharacterById(token.characterId);
+
+    if (fullSheet) {
+      this.dialog.open(CharacterSheetModal, {
+        hasBackdrop: false,
+        width: '1700px',
+        height: '95vh',
+        maxWidth: '95vw',
+        maxHeight: '95vh',
+        panelClass: 'custom-vtt-dialog',
+        data: fullSheet
+      });
+    } else {
+      console.warn("Ficha não encontrada no banco de dados para o ID:", token.characterId);
+    }
+  }
+
+  selectedToken: any = null;
 }

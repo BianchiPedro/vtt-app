@@ -21,8 +21,13 @@
 
           <!-- Token circular -->
           <div class="rounded-full border-[3px] border-amber-600 shadow-xl shadow-black/50 overflow-hidden bg-zinc-800 relative z-10"
+
+               [class.ring-4]="selectedToken === token"
+               [class.ring-sky-500]="selectedToken === token"
+
                [style.width.px]="token.size"
-               [style.height.px]="token.size">
+               [style.height.px]="token.size"
+               (dblclick)="openTokenSheet(token)">
                @if (token.image) {
                <img [src]="token.image" class="w-full h-full object-cover pointer-events-none">
                } @else {

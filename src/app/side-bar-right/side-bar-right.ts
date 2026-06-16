@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { InvokeFunctionExpr } from '@angular/compiler';
 import { CharacterSheetModal } from './character-sheet-modal/character-sheet-modal';
 import { CharacterService } from './character-sheet-modal/character-sheet.service';
 
