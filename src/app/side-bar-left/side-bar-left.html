@@ -1,11 +1,16 @@
 <div class="h-full flex flex-col items-center gap-3 w-[3.5rem] pt-[2rem] bg-gray-900 rounded shadow-md text-center rounded-none">
-        <button mat-icon-button>
-            <mat-icon class="material-symbols-outlined  text-white!">
+        <button mat-icon-button
+                (click)="selectTool('select')"
+                [class.bg-zinc-700]="activeTool === 'select'"
+                [class.text-sky-400]="activeTool === 'select'">
+            <mat-icon class="material-symbols-outlined text-white!" [class.text-sky-400]="activeTool === 'select'">
                 arrow_insert
             </mat-icon>
         </button>
-        <button mat-icon-button>
-            <mat-icon class="material-symbols-outlined text-white!">
+        <button mat-icon-button
+                (click)="selectTool('draw')"
+                [class.bg-zinc-700]="activeTool === 'draw'">
+            <mat-icon class="material-symbols-outlined text-white!" [class.text-sky-400]="activeTool === 'draw'">
                 draw
             </mat-icon>
         </button>

@@ -6,6 +6,23 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { CharacterSheetModal } from '../side-bar-right/character-sheet-modal/character-sheet-modal';
+import { ToolService } from '../side-bar-left/tool.service/tool.service';
+
+interface Token {
+  tokenId: number;
+  characterId: number;
+  name: string;
+  image: string | null;
+  position: { x: number; y: number };
+  size: number;
+}
+
+interface ResizeState {
+  token: Token;
+  initialSize: number;
+  initialX: number;
+  initialY: number;
+}
 
 @Component({
   selector: 'app-map-area',
@@ -14,23 +31,100 @@ import { CharacterSheetModal } from '../side-bar-right/character-sheet-modal/cha
 })
 export class MapArea implements OnInit, OnDestroy {
 
-  dialog = inject(MatDialog)
+  private characterService = inject(CharacterService);
+  private toolService = inject(ToolService);
+  private dialog = inject(MatDialog);
+  private destroy$ = new Subject<void>();
 
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
+  currentTool = 'select';
+
+  // ==========================================
+  // CÂMERA (ZOOM / PAN)
+  // ==========================================
   zoomLevel = 1;
   panX = 0;
   panY = 0;
   isPanning = false;
-  startX = 0;
-  startY = 0;
+  private panStartX = 0;
+  private panStartY = 0;
 
-  // Estado do drag de token
-  draggingToken: any = null;
-  dragOffsetX = 0; // Offset do clique dentro do token (em coords do mapa)
-  dragOffsetY = 0;
-  private characterService = inject(CharacterService);
-  private destroy$ = new Subject<void>();
+  // ==========================================
+  // TOKENS
+  // ==========================================
+  tokensNoMapa: Token[] = [];
+  selectedTokens: Token[] = []; // SEMPRE um array. Nunca um objeto solto.
+
+  // ==========================================
+  // DRAG DE TOKEN(S)
+  // ==========================================
+  public isDraggingTokens = false;
+  private dragOffsets = new Map<Token, { offsetX: number; offsetY: number }>();
+
+  // ==========================================
+  // RESIZE DE TOKEN(S)
+  // ==========================================
+  private isResizingTokens = false;
+  private resizeStartDist = 0;
+  private resizeInitialState: ResizeState[] = [];
+
+  // ==========================================
+  // CAIXA DE SELEÇÃO (marquee)
+  // ==========================================
+  isSelecting = false;
+  selectStartX = 0;
+  selectStartY = 0;
+  selectEndX = 0;
+  selectEndY = 0;
+
+  get selectionBox() {
+    return {
+      left: Math.min(this.selectStartX, this.selectEndX),
+      top: Math.min(this.selectStartY, this.selectEndY),
+      width: Math.abs(this.selectEndX - this.selectStartX),
+      height: Math.abs(this.selectEndY - this.selectStartY)
+    };
+  }
+
+  ngOnInit() {
+    this.characterService.characterImageUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ id, imageUrl }) => {
+        this.tokensNoMapa.forEach(token => {
+          if (token.characterId === id) {
+            token.image = imageUrl;
+          }
+        });
+      });
+
+    this.toolService.activeTool$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(tool => {
+        this.currentTool = tool;
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // ==========================================
+  // HELPER: converte coords de tela -> coords do mapa
+  // ==========================================
+  private screenToMap(clientX: number, clientY: number): { x: number; y: number } {
+    const wrapper = this.mapContainer.nativeElement.parentElement;
+    const rect = wrapper.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left - this.panX) / this.zoomLevel,
+      y: (clientY - rect.top - this.panY) / this.zoomLevel
+    };
+  }
+
+  // ==========================================
+  // ZOOM
+  // ==========================================
   onWheel(event: WheelEvent): void {
     event.preventDefault();
     const wrapper = this.mapContainer.nativeElement.parentElement;
@@ -50,218 +144,227 @@ export class MapArea implements OnInit, OnDestroy {
     this.panY = mouseY - (mouseY - this.panY) * zoomFactor;
   }
 
-  startPan(event: MouseEvent): void {
-
-    this.selectedToken = null;
-
+  // ==========================================
+  // MOUSE DOWN — decide entre pan, seleção (marquee) ou nada
+  // Disparado apenas quando clica no FUNDO do mapa (não em um token,
+  // pois startTokenDrag/startTokenResize chamam stopPropagation antes)
+  // ==========================================
+  onMouseDown(event: MouseEvent): void {
     if (event.button === 1) {
       event.preventDefault();
       this.isPanning = true;
-      this.startX = event.clientX - this.panX;
-      this.startY = event.clientY - this.panY;
+      this.panStartX = event.clientX - this.panX;
+      this.panStartY = event.clientY - this.panY;
+      return;
+    }
+
+    if (event.button === 0 && this.currentTool === 'select') {
+      // Clique no fundo do mapa limpa a seleção e inicia o marquee
+      this.selectedTokens = [];
+      this.isSelecting = true;
+
+      const mapPos = this.screenToMap(event.clientX, event.clientY);
+      this.selectStartX = mapPos.x;
+      this.selectStartY = mapPos.y;
+      this.selectEndX = mapPos.x;
+      this.selectEndY = mapPos.y;
     }
   }
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
-    // Pan do mapa
     if (this.isPanning) {
-      this.panX = event.clientX - this.startX;
-      this.panY = event.clientY - this.startY;
+      this.panX = event.clientX - this.panStartX;
+      this.panY = event.clientY - this.panStartY;
+      return;
     }
 
-    // Drag de token
-    if (this.draggingToken) {
-      const wrapper = this.mapContainer.nativeElement.parentElement;
-      const rect = wrapper.getBoundingClientRect();
-
-      // Converte posição do mouse para coordenadas do mapa
-      const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
-      const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
-
-      // Subtrai o offset para o token não "pular" para o centro
-      this.draggingToken.position.x = mapX - this.dragOffsetX;
-      this.draggingToken.position.y = mapY - this.dragOffsetY;
+    if (this.isDraggingTokens) {
+      const mapPos = this.screenToMap(event.clientX, event.clientY);
+      this.dragOffsets.forEach((offset, token) => {
+        token.position.x = mapPos.x - offset.offsetX;
+        token.position.y = mapPos.y - offset.offsetY;
+      });
+      return;
     }
-    // Resize do token
-    if (this.resizingToken) {
-      const wrapper = this.mapContainer.nativeElement.parentElement;
-      const rect = wrapper.getBoundingClientRect();
 
-      const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
-      const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+    if (this.isResizingTokens) {
+      this.applyResize(event.clientX, event.clientY);
+      return;
+    }
 
-      const centerX = this.resizingToken.position.x + this.resizingToken.size / 2;
-      const centerY = this.resizingToken.position.y + this.resizingToken.size / 2;
-
-      const dx = mapX - centerX;
-      const dy = mapY - centerY;
-      const currentDist = Math.sqrt(dx * dx + dy * dy);
-
-      // Escala proporcional: novo tamanho = tamanho inicial * (distância atual / distância inicial)
-      const newSize = Math.max(30, Math.min(200, 
-        this.resizeStartSize * (currentDist / this.resizeStartDist)
-      ));
-
-      // Reposiciona para manter o centro fixo
-      this.resizingToken.position.x = this.resizingToken.position.x 
-        + (this.resizingToken.size - newSize) / 2;
-      this.resizingToken.position.y = this.resizingToken.position.y 
-        + (this.resizingToken.size - newSize) / 2;
-      
-      this.resizingToken.size = newSize;
+    if (this.isSelecting) {
+      const mapPos = this.screenToMap(event.clientX, event.clientY);
+      this.selectEndX = mapPos.x;
+      this.selectEndY = mapPos.y;
     }
   }
 
   @HostListener('window:mouseup', ['$event'])
   onMouseUp(event: MouseEvent): void {
-    if (event.button === 1) this.isPanning = false;
+    if (event.button === 1) {
+      this.isPanning = false;
+    }
+
     if (event.button === 0) {
-      this.draggingToken = null;
-      this.resizingToken = null; // <- adicione esta linha
+      if (this.isSelecting) {
+        this.finishSelection();
+      }
+      this.isDraggingTokens = false;
+      this.isResizingTokens = false;
+      this.dragOffsets.clear();
+      this.resizeInitialState = [];
     }
   }
 
   @HostListener('window:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedToken) {
-      
-      // CADEADO DE SEGURANÇA: Verifica onde o cursor do mouse (foco) está.
-      // Se estiver piscando dentro de um input ou textarea (como o chat ou ficha), aborta a deleção!
+  onKeyDown(event: KeyboardEvent): void {
+    if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedTokens.length > 0) {
       const activeTag = document.activeElement?.tagName.toLowerCase();
-      if (activeTag === 'input' || activeTag === 'textarea') {
-        return; 
-      }
+      if (activeTag === 'input' || activeTag === 'textarea') return;
 
-      // Filtra a lista, removendo o token que tem o mesmo ID do token selecionado
-      this.tokensNoMapa = this.tokensNoMapa.filter(t => t.tokenId !== this.selectedToken.tokenId);
-      
-      // Limpa a memória de seleção
-      this.selectedToken = null;
+      this.tokensNoMapa = this.tokensNoMapa.filter(t => !this.selectedTokens.includes(t));
+      this.selectedTokens = [];
     }
   }
 
-  // ==========================================
-  // INICIALIZAÇÃO E LIFECYCLE
-  // ==========================================
-  ngOnInit() {
-    // Se inscrever em atualizações de imagem de personagem
-    this.characterService.characterImageUpdated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(({ id, imageUrl }) => {
-        // Encontrar todos os tokens com este characterId e atualizar sua imagem
-        this.tokensNoMapa.forEach(token => {
-          if (token.characterId === id) {
-            token.image = imageUrl;
-          }
-        });
-      });
-  }
+  private finishSelection(): void {
+    this.isSelecting = false;
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    const box = this.selectionBox;
+    const minX = box.left;
+    const maxX = box.left + box.width;
+    const minY = box.top;
+    const maxY = box.top + box.height;
+
+    this.selectedTokens = this.tokensNoMapa.filter(token => {
+      const tokenLeft = token.position.x;
+      const tokenRight = token.position.x + token.size;
+      const tokenTop = token.position.y;
+      const tokenBottom = token.position.y + token.size;
+
+      return tokenRight > minX && tokenLeft < maxX && tokenBottom > minY && tokenTop < maxY;
+    });
   }
 
   // ==========================================
-  // DROP DA SIDEBAR
+  // DROP DA SIDEBAR (criação de novo token)
   // ==========================================
-  tokensNoMapa: any[] = [];
-
-  onDragOver(event: DragEvent) {
+  onDragOver(event: DragEvent): void {
     event.preventDefault();
     if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
   }
 
-  onDrop(event: DragEvent) {
+  onDrop(event: DragEvent): void {
     event.preventDefault();
     const dataString = event.dataTransfer?.getData('application/JSON');
     if (!dataString) return;
 
     const character = JSON.parse(dataString);
-    const wrapper = this.mapContainer.nativeElement.parentElement;
-    const rect = wrapper.getBoundingClientRect();
-
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-
-    // Converte para coordenadas do mapa, centralizando o token (60px / 2 = 30)
-    const coordX = (mouseX - this.panX) / this.zoomLevel - 30;
-    const coordY = (mouseY - this.panY) / this.zoomLevel - 30;
+    const mapPos = this.screenToMap(event.clientX, event.clientY);
+    const size = 60;
 
     this.tokensNoMapa.push({
       tokenId: Date.now() + Math.random(),
       characterId: character.id,
       name: character.name,
       image: character.characterImage,
-      position: { x: coordX, y: coordY },
-      size: 60  // <- tamanho inicial
+      position: { x: mapPos.x - size / 2, y: mapPos.y - size / 2 },
+      size
     });
   }
 
   // ==========================================
-  // DRAG DE TOKEN NO MAPA
+  // DRAG DE TOKEN(S)
   // ==========================================
-  startTokenDrag(event: MouseEvent, token: any): void {
-
-    // Só arrasta com botão esquerdo
+  startTokenDrag(event: MouseEvent, token: Token): void {
     if (event.button !== 0) return;
-    event.stopPropagation(); // Não inicia pan do mapa
+    event.stopPropagation();
 
-    const wrapper = this.mapContainer.nativeElement.parentElement;
-    const rect = wrapper.getBoundingClientRect();
+    // Se o token clicado não está na seleção atual, a seleção passa a ser só ele
+    if (!this.selectedTokens.includes(token)) {
+      this.selectedTokens = [token];
+    }
 
-    // Onde o mouse está no espaço do mapa
-    const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
-    const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+    const mapPos = this.screenToMap(event.clientX, event.clientY);
 
-    // Offset = diferença entre onde o mouse clicou e a origem do token
-    // Isso evita que o token "salte" para ter seu canto no cursor
-    this.dragOffsetX = mapX - token.position.x;
-    this.dragOffsetY = mapY - token.position.y;
+    this.dragOffsets.clear();
+    this.selectedTokens.forEach(t => {
+      this.dragOffsets.set(t, {
+        offsetX: mapPos.x - t.position.x,
+        offsetY: mapPos.y - t.position.y
+      });
+    });
 
-    this.draggingToken = token;
-    
-    this.selectedToken = token;
+    this.isDraggingTokens = true;
   }
 
-  // Estado do resize de token
-resizingToken: any = null;
-resizeStartDist = 0;  // distância inicial do handle ao centro (em coords do mapa)
-resizeStartSize = 60; // tamanho inicial do token em px
+  // ==========================================
+  // RESIZE DE TOKEN(S) — escala o grupo selecionado mantendo o centro de cada um
+  // ==========================================
+  startTokenResize(event: MouseEvent, token: Token): void {
+    if (event.button !== 0) return;
+    event.stopPropagation();
 
-startTokenResize(event: MouseEvent, token: any): void {
-  if (event.button !== 0) return;
-    event.stopPropagation(); // não inicia drag nem pan
+    if (!this.selectedTokens.includes(token)) {
+      this.selectedTokens = [token];
+    }
 
-    const wrapper = this.mapContainer.nativeElement.parentElement;
-    const rect = wrapper.getBoundingClientRect();
+    this.resizeInitialState = this.selectedTokens.map(t => ({
+      token: t,
+      initialSize: t.size,
+      initialX: t.position.x,
+      initialY: t.position.y
+    }));
 
-    // Centro do token em coords do mapa
+    const mapPos = this.screenToMap(event.clientX, event.clientY);
     const centerX = token.position.x + token.size / 2;
     const centerY = token.position.y + token.size / 2;
+    const dx = mapPos.x - centerX;
+    const dy = mapPos.y - centerY;
+    this.resizeStartDist = Math.sqrt(dx * dx + dy * dy) || 1; // evita divisão por zero
 
-    // Posição do mouse em coords do mapa
-    const mapX = (event.clientX - rect.left - this.panX) / this.zoomLevel;
-    const mapY = (event.clientY - rect.top - this.panY) / this.zoomLevel;
+    this.isResizingTokens = true;
+  }
 
-    // Distância do mouse ao centro no momento do clique
-    const dx = mapX - centerX;
-    const dy = mapY - centerY;
-    this.resizeStartDist = Math.sqrt(dx * dx + dy * dy);
-    this.resizeStartSize = token.size;
+  private applyResize(clientX: number, clientY: number): void {
+    if (this.resizeInitialState.length === 0) return;
 
-    this.resizingToken = token;
-    
-    this.selectedToken = token;
-}
+    // Usamos o token "âncora" (o que foi clicado primeiro) para calcular a proporção
+    const anchor = this.resizeInitialState[0];
+    const mapPos = this.screenToMap(clientX, clientY);
 
-  openTokenSheet(token: any) {
+    const anchorCenterX = anchor.initialX + anchor.initialSize / 2;
+    const anchorCenterY = anchor.initialY + anchor.initialSize / 2;
+    const dx = mapPos.x - anchorCenterX;
+    const dy = mapPos.y - anchorCenterY;
+    const currentDist = Math.sqrt(dx * dx + dy * dy);
+
+    const targetAnchorSize = Math.max(30, Math.min(800, anchor.initialSize * (currentDist / this.resizeStartDist)));
+    const ratio = targetAnchorSize / anchor.initialSize;
+
+    this.resizeInitialState.forEach(state => {
+      const scaledSize = Math.max(20, state.initialSize * ratio);
+      const newX = state.initialX + (state.initialSize - scaledSize) / 2;
+      const newY = state.initialY + (state.initialSize - scaledSize) / 2;
+
+      state.token.size = scaledSize;
+      state.token.position.x = newX;
+      state.token.position.y = newY;
+    });
+  }
+
+  // ==========================================
+  // ABRIR FICHA DO PERSONAGEM
+  // ==========================================
+  openTokenSheet(event: MouseEvent, token: Token): void {
+    event.stopPropagation();
+
     const fullSheet = this.characterService.getCharacterById(token.characterId);
 
     if (fullSheet) {
       this.dialog.open(CharacterSheetModal, {
-        hasBackdrop: false,
+        hasBackdrop: true,           // <- ESSENCIAL: isola cliques do mapa
         width: '1700px',
         height: '95vh',
         maxWidth: '95vw',
@@ -270,9 +373,7 @@ startTokenResize(event: MouseEvent, token: any): void {
         data: fullSheet
       });
     } else {
-      console.warn("Ficha não encontrada no banco de dados para o ID:", token.characterId);
+      console.warn('Ficha não encontrada no banco de dados para o ID:', token.characterId);
     }
   }
-
-  selectedToken: any = null;
 }
