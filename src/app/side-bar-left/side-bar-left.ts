@@ -10,8 +10,11 @@ import { ToolService } from './tool.service/tool.service';
 })
 export class SideBarLeft implements OnInit {
 
-  private toolService = inject(ToolService);
+  toolService = inject(ToolService);
   activeTool = 'select';
+  drawColor = '#4447ef'
+
+  showColorPicker = false;
 
   ngOnInit() {
     this.toolService.activeTool$.subscribe(tool => {
@@ -21,6 +24,17 @@ export class SideBarLeft implements OnInit {
 
   selectTool(toolName: string) {
     this.toolService.setTool(toolName);
+
+    if(toolName === 'draw') {
+      this.showColorPicker = !this.showColorPicker;
+    } else {
+      this.showColorPicker = false;
+    }
+  }
+
+  onColorChange(event: Event) {
+    const color = (event.target as HTMLInputElement).value;
+    this.toolService.setDrawColor(color);
   }
 
 }

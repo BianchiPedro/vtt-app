@@ -61,5 +61,29 @@
 
       </div>
     }
+
+     <svg class="absolute inset-0 w-full h-full pointer-events-none"
+         [class.z-30]="true"
+         style="overflow: visible;">
+
+      @for (stroke of drawStroke; track stroke.id) {
+        <path [attr.d]="getStrokePath(stroke)"
+              [attr.stroke]="stroke.color"
+              stroke-width="4"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+      }
+
+      @if (currentStroke) {
+        <path [attr.d]="getStrokePath(currentStroke)"
+              [attr.stroke]="currentStroke.color"
+              stroke-width="4"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+      }
+    </svg>
+
   </div>
 </div>

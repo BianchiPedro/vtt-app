@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../side-bar-right/character-sheet-modal/character-sheet.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { CharacterSheetModal } from '../side-bar-right/character-sheet-modal/character-sheet-modal';
 import { ToolService } from '../side-bar-left/tool.service/tool.service';
@@ -24,6 +24,12 @@ interface ResizeState {
   initialY: number;
 }
 
+interface DrawStroke {
+  id: number;
+  color: string;
+  points: { x: number, y: number}[];
+}
+
 @Component({
   selector: 'app-map-area',
   imports: [MatIconModule, CommonModule],
@@ -39,6 +45,39 @@ export class MapArea implements OnInit, OnDestroy {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   currentTool = 'select';
+  currentDrawColor = '#4447ef'
+
+  ngOnInit() {
+    this.characterService.characterImageUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ id, imageUrl }) => {
+        this.tokensNoMapa.forEach(token => {
+          if (token.characterId === id) {
+            token.image = imageUrl;
+          }
+        });
+      });
+
+    this.toolService.activeTool$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(tool => {
+        this.currentTool = tool;
+      });
+
+    this.toolService.drawColor$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(color => {
+        this.currentDrawColor = color
+      })
+  }
+
+  // ==========================================
+  // DESENHO (PINCEL)
+  // ==========================================
+
+  drawStroke: DrawStroke[] = [];
+  private isDrawing = false;
+  currentStroke: DrawStroke | null = null;
 
   // ==========================================
   // CÂMERA (ZOOM / PAN)
@@ -85,24 +124,6 @@ export class MapArea implements OnInit, OnDestroy {
       width: Math.abs(this.selectEndX - this.selectStartX),
       height: Math.abs(this.selectEndY - this.selectStartY)
     };
-  }
-
-  ngOnInit() {
-    this.characterService.characterImageUpdated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(({ id, imageUrl }) => {
-        this.tokensNoMapa.forEach(token => {
-          if (token.characterId === id) {
-            token.image = imageUrl;
-          }
-        });
-      });
-
-    this.toolService.activeTool$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(tool => {
-        this.currentTool = tool;
-      });
   }
 
   ngOnDestroy() {
@@ -158,7 +179,14 @@ export class MapArea implements OnInit, OnDestroy {
       return;
     }
 
-    if (event.button === 0 && this.currentTool === 'select') {
+    if (event.button === 0) {
+      if (this.currentTool === 'draw'){
+        this.startDrawing(event);
+        return;
+      }
+    }
+
+    if (this.currentTool === 'select') {
       // Clique no fundo do mapa limpa a seleção e inicia o marquee
       this.selectedTokens = [];
       this.isSelecting = true;
@@ -193,6 +221,11 @@ export class MapArea implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.isDrawing) {
+      this.continueDrawing(event);
+      return;
+    }
+
     if (this.isSelecting) {
       const mapPos = this.screenToMap(event.clientX, event.clientY);
       this.selectEndX = mapPos.x;
@@ -210,11 +243,51 @@ export class MapArea implements OnInit, OnDestroy {
       if (this.isSelecting) {
         this.finishSelection();
       }
+
+      if (this.isDrawing) {
+        this.finishDrawing();
+      }
+      
       this.isDraggingTokens = false;
       this.isResizingTokens = false;
       this.dragOffsets.clear();
       this.resizeInitialState = [];
     }
+  }
+
+  // ==========================================
+  // MÉTODOS DE DESENHO
+  // ==========================================
+
+  private startDrawing(event: MouseEvent): void {
+    const mapPos = this.screenToMap(event.clientX, event.clientY);
+
+    this.currentStroke = {
+      id: Date.now() + Math.random(),
+      color: this.currentDrawColor,
+      points: [mapPos]
+    };
+    this.isDrawing = true;
+  }
+
+  private continueDrawing(event: MouseEvent): void {
+    if (!this.currentStroke) return;
+    const mapPos = this.screenToMap(event.clientX, event.clientY);
+    this.currentStroke.points.push(mapPos);
+  } 
+
+  private finishDrawing(): void {
+    if (this.currentStroke && this.currentStroke.points.length > 1) {
+      this.drawStroke.push(this.currentStroke);
+    }
+    this.currentStroke = null;
+    this.isDrawing = false;
+  }
+
+  getStrokePath(stroke: DrawStroke): string {
+    if (stroke.points.length === 0) return '';
+    const [first, ...rest] = stroke.points;
+    return `M ${first.x} ${first.y} ` + rest.map(p => `L ${p.x} ${p.y} `).join(' ');
   }
 
   @HostListener('window:keydown', ['$event'])

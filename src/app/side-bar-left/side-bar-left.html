@@ -1,12 +1,14 @@
-<div class="h-full flex flex-col items-center gap-3 w-[3.5rem] pt-[2rem] bg-gray-900 rounded shadow-md text-center rounded-none">
-        <button mat-icon-button
-                (click)="selectTool('select')"
-                [class.bg-zinc-700]="activeTool === 'select'"
-                [class.text-sky-400]="activeTool === 'select'">
-            <mat-icon class="material-symbols-outlined text-white!" [class.text-sky-400]="activeTool === 'select'">
-                arrow_insert
-            </mat-icon>
-        </button>
+<div class="h-full flex flex-col items-center gap-3 w-[3.5rem] pt-[2rem] bg-gray-900 rounded shadow-md text-center rounded-none relative">
+    <button mat-icon-button
+            (click)="selectTool('select')"
+            [class.bg-zinc-700]="activeTool === 'select'"
+            [class.text-sky-400]="activeTool === 'select'">
+        <mat-icon class="material-symbols-outlined text-white!" [class.text-sky-400]="activeTool === 'select'">
+            arrow_insert
+        </mat-icon>
+    </button>
+
+    <div class="relative">
         <button mat-icon-button
                 (click)="selectTool('draw')"
                 [class.bg-zinc-700]="activeTool === 'draw'">
@@ -14,27 +16,54 @@
                 draw
             </mat-icon>
         </button>
-        <button mat-icon-button>
-            <mat-icon class="text-white!">
-                T
-            </mat-icon>
-        </button>
-        <button mat-icon-button>
-            <mat-icon class="material-symbols-outlined  text-white!">
-                casino
-            </mat-icon>
-        </button>
-        <button mat-icon-button>
-            <mat-icon class="material-symbols-outlined  text-white!">
-                masked_transitions
-            </mat-icon>
-        </button>
-        <button mat-icon-button>
-            <mat-icon class="material-symbols-outlined text-white!">
-                blur_medium
-            </mat-icon>
-        </button>
-        
+
+        <!-- Indicador da cor escolhida -->
+        @if (activeTool === 'draw') {
+            <div class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-900"
+                 [style.background-color]="drawColor">
+            </div>
+        }
+
+        <!-- Seletor de cor -->
+        @if (showColorPicker) {
+            <div class="absolute left-14 top-0 bg-zinc-800 border-2 border-zinc-950 rounded-md shadow-2xl p-3 z-50 flex flex-col gap-2 w-40">
+                <p class="text-white text-xs font-bold">Cor do pincel</p>
+                <input type="color" [value]="drawColor" (input)="onColorChange($event)"
+                       class="w-full h-10 rounded cursor-pointer border-none bg-transparent">
+
+                <div class="flex flex-wrap gap-1 mt-1">
+                    @for (preset of ['#ef4444', '#22c55e', '#3b82f6', '#eab308', '#ffffff', '#000000']; track preset) {
+                        <button class="w-6 h-6 rounded-full border-2 border-zinc-600 hover:scale-110 transition"
+                                [style.background-color]="preset"
+                                (click)="toolService.setDrawColor(preset); drawColor = preset">
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <button mat-icon-button>
+        <mat-icon class="text-white!">
+            T
+        </mat-icon>
+    </button>
+    <button mat-icon-button>
+        <mat-icon class="material-symbols-outlined  text-white!">
+            casino
+        </mat-icon>
+    </button>
+    <button mat-icon-button>
+        <mat-icon class="material-symbols-outlined  text-white!">
+            masked_transitions
+        </mat-icon>
+    </button>
+    <button mat-icon-button>
+        <mat-icon class="material-symbols-outlined text-white!">
+            blur_medium
+        </mat-icon>
+    </button>
+
     <div class="mt-auto pb-[2rem]">
         <p class="text-[10px] text-white">CAMADAS</p>
 
