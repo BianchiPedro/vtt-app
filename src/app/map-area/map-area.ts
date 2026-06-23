@@ -68,7 +68,11 @@ export class MapArea implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(color => {
         this.currentDrawColor = color
-      })
+      });
+
+    this.toolService.clearDrawings$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {this.drawStroke = []});
   }
 
   // ==========================================

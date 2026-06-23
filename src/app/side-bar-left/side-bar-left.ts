@@ -37,4 +37,8 @@ export class SideBarLeft implements OnInit {
     this.toolService.setDrawColor(color);
   }
 
+  clearDrawings() {
+    this.toolService.clearDrawings();
+  }
+
 }
